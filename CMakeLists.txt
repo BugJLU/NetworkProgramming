@@ -3,4 +3,4 @@ project(NetworkProgramming)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(NetworkProgramming main.cpp)
+add_executable(NetworkProgramming main.cpp Socket.cpp Socket.h ServerSocket.cpp ServerSocket.h InetAddr.cpp InetAddr.h)
