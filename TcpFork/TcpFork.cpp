@@ -27,10 +27,10 @@ int TcpFork::execute() {
             serverSocket.close();
             while(true){
                 i = clientSocket.recv(data,255);
-                cout<<"recv:"<<data<<endl;
+                cout<<k<<"->recv:"<<data<<endl;
                 j = clientSocket.send(data,255);
-                cout<<"send:"<<data<<endl;
-                if(i>0&&j>0){
+                cout<<k<<"->send:"<<data<<endl;
+                if(i<0){
                     break;
                 }
             }
@@ -39,7 +39,7 @@ int TcpFork::execute() {
         }
         clientSocket.close();
         k++;
-        if(k>2){
+        if(k>9){
             break;
         }
     }
