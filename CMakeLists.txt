@@ -9,7 +9,7 @@ add_executable(SocketTest ${SOCK_LIB} SocketTest.cpp)
 add_executable(ServerSocketTest ${SOCK_LIB} ServerSocketTest.cpp)
 add_executable(NetworkProgramming2Client exp2/client2.cpp Socket.cpp Socket.h ServerSocket.cpp ServerSocket.h InetAddr.cpp InetAddr.h)
 add_executable(NetworkProgramming2Server exp2/server2.cpp Socket.cpp Socket.h ServerSocket.cpp ServerSocket.h InetAddr.cpp InetAddr.h)
-add_executable(NetworkProgrammingTest test.cpp)
+
 find_package(Threads REQUIRED)
 target_link_libraries(NetworkProgramming2Client Threads::Threads)
 target_link_libraries(NetworkProgramming2Server Threads::Threads)

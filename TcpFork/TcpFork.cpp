@@ -9,17 +9,23 @@
 
 using namespace std;
 
+
+
 TcpFork::TcpFork(int port) {
+    this->port = port;
+}
+
+int TcpFork::execute() {
     int i,j,k;
     k = 0;
     char data[255];
     ServerSocket serverSocket(port);
     serverSocket.listen();
-    while(1){
+    while(true){
         Socket clientSocket = serverSocket.accept();
         if(fork()==0){
             serverSocket.close();
-            while(1){
+            while(true){
                 i = clientSocket.recv(data,255);
                 cout<<"recv:"<<data<<endl;
                 j = clientSocket.send(data,255);
@@ -38,8 +44,4 @@ TcpFork::TcpFork(int port) {
         }
     }
     serverSocket.close();
-}
-
-int TcpFork::excute() {
-
 }

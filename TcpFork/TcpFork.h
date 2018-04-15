@@ -9,10 +9,10 @@
 
 class TcpFork {
 private:
-    int num;
+    int port;
 public:
-    TcpFork(int port);
-    int excute();
+    explicit  TcpFork(int port);
+    int execute();
 };
 
 
