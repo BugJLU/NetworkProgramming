@@ -5,10 +5,10 @@
 #include <cstring>
 #include "ServerSocket.h"
 
-void* send_msg(void* arg);
-void* recv_msg(void* arg);
+void* handle_client(void* arg)
 
 const int MSG_SIZE = 30;
+pthread_mutex_t mutex;
 
 int main()
 {
@@ -16,40 +16,31 @@ int main()
     monitorSock.bind(8000);
     monitorSock.listen();
 
-    pthread_t recv_thread;
-    pthread_t send_thread;
+    pthread_t handle_thread;
 
     Socket clientSock;
+    pthread_mutex_init(&mutex,NULL);
     while(1)
     {
         clientSock = monitorSock.accept();
         puts("1");
-        pthread_create(&recv_thread, NULL, recv_msg, &clientSock);
+        pthread_create(&handle_thread, NULL, handle_client, &clientSock);
         puts("2");
-        pthread_create(&send_thread, NULL, send_msg, &clientSock);
-        puts("3");
-        pthread_join(recv_thread, NULL);
-        pthread_join(send_thread, NULL);
+        pthread_detach(handle_thread)
 
     }
 }
 
-void* send_msg(void* arg)
+void* handle_client(void* arg)
 {
     char msg[MSG_SIZE];
+    pthread_mutex_lock(&mutex);
     Socket client = *(Socket*)arg;
     time_t t = time(0);
-    strftime(msg,sizeof(msg),"%Y/%m/%d %X %A 本年第%j天 %z",localtime(&t));
-    client.send(msg, strlen(msg));
-    return NULL;
-
-}
-
-void* recv_msg(void* arg)
-{
-    char msg[MSG_SIZE];
-    Socket client = *(Socket*)arg;
-    client.recv(msg, MSG_SIZE);
+    strftime(msg,sizeof(msg),"%Y/%m/%d %X %A",localtime(&t));
     fputs(msg, stdout);
+    client.send(msg, strlen(msg));
+    pthread_mutex_lock(&mutex);
     return NULL;
 }
+
