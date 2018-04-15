@@ -3,8 +3,11 @@
 //
 
 #include <cstring>
-#include "InetAddr.h"
-#include "Socket.h"
+#include <zconf.h>
+#include <iostream>
+#include "../InetAddr.h"
+#include "../Socket.h"
+using namespace std;
 
 void* send_msg(void* arg);
 void* recv_msg(void* arg);
@@ -16,50 +19,58 @@ int main()
 {
     InetAddr address;
     address.setIP("127.0.0.1");
-    address.setPort(8000);
+    address.setPort(9001);
 
-    Socket clientSock;
-    if( clientSock.connect(address) == -1) {
-        puts("connect error!");
-        return 0;
-    }
+
 
     pthread_t send_thread;
     pthread_t recv_thread;
 
+
+
     while(status)
     {
+        Socket clientSock;
+
+
+        if( clientSock.connect(address) == -1) {
+            puts("connect error!");
+            return 0;
+        }
         pthread_create(&send_thread, NULL, send_msg, &clientSock);
-        puts("1");
         pthread_create(&recv_thread, NULL, recv_msg, &clientSock);
-        puts("2");
         pthread_join(send_thread, NULL);
-        puts("3");
         pthread_join(recv_thread, NULL);
-        puts("4");
+        clientSock.close();
     }
     return 0;
 }
 
 void* send_msg(void* arg)
 {
+    puts("bf send");
     char msg[MSG_SIZE];
     Socket client = *(Socket*)arg;
-    fgets(msg, strlen(msg), stdin);
-    puts(msg);
+    cout << strlen(msg) << endl;
+    fgets(msg, MSG_SIZE, stdin);            //为啥MSG_SIZE就可以，而strlen(msg)就不行
+
+    fputs(msg, stdout);
     if(!strcmp(msg, "q\n") || !strcmp(msg, "Q\n"))
         status = 0;
     else
         client.send(msg, strlen(msg));
+    puts("af send");
     return NULL;
 
 }
 
 void* recv_msg(void* arg)
 {
+    puts("bf recv");
     char msg[MSG_SIZE];
     Socket client = *(Socket*)arg;
     client.recv(msg, MSG_SIZE);
     fputs(msg, stdout);
+    puts("af recv");
     return NULL;
 }
