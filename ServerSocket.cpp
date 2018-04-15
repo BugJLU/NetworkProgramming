@@ -60,7 +60,7 @@ Socket& ServerSocket::accept() {
         throw "socket accept error";
     }
     Socket *cliSocket = new Socket();
-    //TODO: to be finished.
+    cliSocket->cliSock = cliSock;
     return *cliSocket;
 }
 
