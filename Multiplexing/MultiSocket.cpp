@@ -24,14 +24,15 @@ int MultiSocket::addSocket(const Socket &sock) {
 //    pthread_mutex_unlock(&mutex);
 }
 
+typedef struct pollfd _pollfd;
+
 void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &outSocks) {
 //    pthread_mutex_lock(&mutex);
     int max = -1;
 
     int asize = sockArr.size();
 
-    struct pollfd* sockpolls;
-    sockpolls = new pollfd[asize];
+    _pollfd* sockpolls = new _pollfd[asize];
 
     for (int i = 0; i < asize; ++i) {
         sockpolls[i].fd = sockArr[i].getFd();
@@ -49,22 +50,27 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
 //        throw "poll error";
 //    }
     if (res < 0) {
+        delete [] sockpolls;
         return;
     }
     if (res == 0) {
+        delete [] sockpolls;
         return;
     }
 
     // Some sockets are ready to write/read.
     for (int i = asize-1; i >=0; --i) {
         Socket sock1 = sockArr[i];
+        //TODO
         if (sockpolls[i].revents & POLLIN) {
             inSocks.push_back(sock1);
         }
         if (sockpolls[i].revents & POLLOUT) {
             outSocks.push_back(sock1);
         }
+        //TODO
     }
 //    pthread_mutex_unlock(&mutex);
+    delete [] sockpolls;
 }
 

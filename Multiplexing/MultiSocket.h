@@ -35,7 +35,7 @@ public:
     // ------ Return number of empty slots for socket, -1 means already full.
     int addSocket(const Socket &sock);
 
-    std::vector<Socket> getSocks() {
+    std::vector<Socket>& getSocks() {
         return sockArr;
     }
 
