@@ -30,7 +30,8 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
 
     int asize = sockArr.size();
 
-    struct pollfd sockpolls[asize];
+    struct pollfd* sockpolls;
+    sockpolls = new pollfd[asize];
 
     for (int i = 0; i < asize; ++i) {
         sockpolls[i].fd = sockArr[i].getFd();
@@ -41,6 +42,7 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
     max += 1;
 
     int res = poll(sockpolls, max, 0);
+//    int res = 3;
 
     // TODO: try catch ??
 //    if (res < 0) {
@@ -54,7 +56,7 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
     }
 
     // Some sockets are ready to write/read.
-    for (int i = 0; i < asize; ++i) {
+    for (int i = asize-1; i >=0; --i) {
         Socket sock1 = sockArr[i];
         if (sockpolls[i].revents & POLLIN) {
             inSocks.push_back(sock1);
