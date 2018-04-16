@@ -29,8 +29,13 @@ void RawSocket::catching() {
             continue;
         }
         pip = (IPHeader*)buf;
-        analyseIP();
         int iplen = (pip->h_verlen & 0x0f) * 4;
+        printf("IP ----- \n"
+                          "total length: %d bytes\n"
+                          "recv length: %d bytes\n"
+                          "header length: %d bytes\n",
+               pip->total_len, n, iplen);
+        analyseIP();
         if(pip->proto == IPPROTO_TCP){
             ptcp = (TCPHeader*)(buf + iplen);
             analyseTCP();
@@ -41,9 +46,9 @@ void RawSocket::catching() {
             picmp = (ICMPHeader*)(buf + iplen);
             analyseICMP();
         }else{
-            printf("other protocol !\n");
+            printf("\nother protocol !\n");
         }
-        printf("\n\n");
+        //printf("\n\n");
     }
     close(sockfd);
     return;
@@ -58,10 +63,10 @@ void RawSocket::analyseIP() {
 }
 
 void RawSocket::analyseTCP() {
-    printf("TCP -----\n");
+    int tcplen = (ptcp->th_lenres>>4) * 4;
+    printf("TCP ----- (header: %d bytes)\n", tcplen);
     printf("Source port: %u\n",ntohs(ptcp->th_sport));
     printf("Destination port: %u\n",ntohs(ptcp->th_dport));
-    int tcplen = (ptcp->th_lenres>>4) * 4;
     printData((unsigned char*)ptcp + tcplen);
 
 }
@@ -76,15 +81,15 @@ void RawSocket::analyseUDP() {
 void RawSocket::analyseICMP() {
     printf("ICMP ------\n");
     printf("type: %u\n",picmp->icmp_type);
-    printf("sub code: %u\n",picmp->icmp_code);
+    printf("code: %u\n",picmp->icmp_code);
     printData((unsigned char*)picmp + sizeof(ICMPHeader));
 }
 
 void RawSocket::printData(unsigned char *pdata) {
-    printf("Data: ");
     int len = n - (pdata-buf);
+    printf("Data(%d bytes): ",len);
     for(int i = 0; i<MAXDATA&&i<len; i++){
-        printf("%x",pdata[i]);
+        printf("%c",pdata[i]);
     }
     printf("\n\n");
 }
