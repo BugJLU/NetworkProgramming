@@ -6,31 +6,38 @@
 #define NETWORKPROGRAMMING_MULTISOCKET_H
 
 #include <vector>
+#include <pthread.h>
 #include "../Socket.h"
 
-#define DEFAULT_SOCKNUM 1024
+//#define DEFAULT_SOCKNUM 1024
 
 class MultiSocket {
 
-    void init(int len) {
-        maxNum = len;
-        sockArr = new Socket[len];
-        sockNum = 0;
+    void mutexInit() {
+        pthread_mutex_init(&mutex, NULL);
     }
 
-    Socket* sockArr;
-    int sockNum;
-    int maxNum;
+    std::vector<Socket> sockArr;
+    pthread_mutex_t mutex;
 
 public:
-    MultiSocket(int sockNum = DEFAULT_SOCKNUM) {
-        init(sockNum);
+    MultiSocket() {
+        mutexInit();
+        sockArr = std::vector<Socket>();
     }
 
     MultiSocket(const std::vector<Socket>& socks);
 
-    // Return number of empty slots for socket, -1 means already full.
+    ~MultiSocket() {
+        pthread_mutex_destroy(&mutex);
+    }
+
+    // ------ Return number of empty slots for socket, -1 means already full.
     int addSocket(const Socket &sock);
+
+    std::vector<Socket> getSocks() {
+        return sockArr;
+    }
 
     void listenAll(std::vector<Socket>& inSocks, std::vector<Socket>& outSocks);
 };

@@ -6,24 +6,33 @@
 #include "MultiSocket.h"
 
 MultiSocket::MultiSocket(const std::vector<Socket> &socks) {
-    init(static_cast<int>(socks.size()));
-    for (int i = 0; i < socks.size(); ++i) {
-        addSocket(socks[i]);
-    }
+    mutexInit();
+    sockArr = std::vector<Socket>(socks);
 }
 
+//int MultiSocket::addSocket(const Socket &sock) {
+//    if (sockNum == maxNum)
+//        return -1;
+//    sockArr[sockNum] = sock;
+//    sockNum++;
+//    return maxNum - sockNum;
+//}
+
 int MultiSocket::addSocket(const Socket &sock) {
-    if (sockNum == maxNum)
-        return -1;
-    sockArr[sockNum] = sock;
-    sockNum++;
-    return maxNum - sockNum;
+//    pthread_mutex_lock(&mutex);
+    sockArr.push_back(sock);
+//    pthread_mutex_unlock(&mutex);
 }
 
 void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &outSocks) {
-    struct pollfd sockpolls[sockNum];
+//    pthread_mutex_lock(&mutex);
     int max = -1;
-    for (int i = 0; i < sockNum; ++i) {
+
+    int asize = sockArr.size();
+
+    struct pollfd sockpolls[asize];
+
+    for (int i = 0; i < asize; ++i) {
         sockpolls[i].fd = sockArr[i].getFd();
         sockpolls[i].events = POLLIN | POLLOUT;
         if (sockpolls[i].fd > max)
@@ -33,20 +42,27 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
 
     int res = poll(sockpolls, max, 0);
 
+    // TODO: try catch ??
+//    if (res < 0) {
+//        throw "poll error";
+//    }
     if (res < 0) {
-        throw "poll error";
+        return;
     }
     if (res == 0) {
         return;
     }
 
     // Some sockets are ready to write/read.
-    for (int i = 0; i < sockNum; ++i) {
+    for (int i = 0; i < asize; ++i) {
+        Socket sock1 = sockArr[i];
         if (sockpolls[i].revents & POLLIN) {
-            inSocks.push_back(sockArr[i]);
+            inSocks.push_back(sock1);
         }
         if (sockpolls[i].revents & POLLOUT) {
-            inSocks.push_back(sockArr[i]);
+            outSocks.push_back(sock1);
         }
     }
+//    pthread_mutex_unlock(&mutex);
 }
+
