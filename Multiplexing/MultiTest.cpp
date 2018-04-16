@@ -24,6 +24,7 @@ void* serlisten(void* arg) {
 
         pthread_mutex_lock(&mux);
         multiSocket.addSocket(tmp);
+        sleep(1);
         pthread_mutex_unlock(&mux);
 
         sleep(1);
@@ -49,11 +50,12 @@ int main() {
         try {
             pthread_mutex_lock(&mux);
             multiSocket.listenAll(in, out);
+            cout<<multiSocket.getSocks().size()<<" "<<in.size()<<" "<<out.size()<<endl;
+            sleep(1);
             pthread_mutex_unlock(&mux);
         } catch (char* str) {
             cout<<str;
         }
-        cout<<multiSocket.getSocks().size()<<" "<<in.size()<<" "<<out.size()<<endl;
         for (int i = 0; i < in.size(); ++i) {
             cout<<in[i].getFd()<<endl;
             in[i].recv(buf, 255);

@@ -10,8 +10,10 @@ set(TCP_FORK_LIB TcpFork/TcpFork.cpp TcpFork/TcpFork.h)
 add_executable(SocketTest ${SOCK_LIB} SocketTest.cpp)
 add_executable(ServerSocketTest ${SOCK_LIB} ServerSocketTest.cpp)
 add_executable(TcpForkTest ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTest.cpp)
+add_executable(TcpForkTestCilent ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTestClient.cpp)
 add_executable(MultiTest ${SOCK_LIB} ${MULTI_LIB} Multiplexing/MultiTest.cpp)
 add_executable(EndlessClient ${SOCK_LIB} PublicTests/EndlessClient.cpp)
+add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp SocketRaw/RawSocketTest.cpp)
 
 # Executables:
 add_executable(NetworkProgramming2Client exp2/client2.cpp ${SOCK_LIB})
@@ -19,6 +21,5 @@ add_executable(NetworkProgramming2Server exp2/server2.cpp ${SOCK_LIB})
 find_package(Threads REQUIRED)
 target_link_libraries(NetworkProgramming2Client Threads::Threads)
 target_link_libraries(NetworkProgramming2Server Threads::Threads)
+target_link_libraries(MultiTest Threads::Threads)
 
-add_executable(TcpForkTestCilent ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTextClient.cpp)
-add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp SocketRaw/RawSocketTest.cpp)
