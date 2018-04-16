@@ -21,3 +21,6 @@ target_link_libraries(NetworkProgramming2Client Threads::Threads)
 target_link_libraries(NetworkProgramming2Server Threads::Threads)
 
 add_executable(TcpForkTestCilent ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTextClient.cpp)
+add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp SocketRaw/RawSocketTest.cpp)
+add_executable(TcpForkTest ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTest.cpp)
+add_executable(TcpForkTestCilent ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTestClient.cpp)

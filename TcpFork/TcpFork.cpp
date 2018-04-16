@@ -3,6 +3,7 @@
 //
 #include <unistd.h>
 #include <iostream>
+#include <cstring>
 #include "TcpFork.h"
 #include "../Socket.h"
 #include "../ServerSocket.h"
@@ -16,21 +17,31 @@ TcpFork::TcpFork(int port) {
 }
 
 int TcpFork::execute() {
-    int i,j,k;
+    int recvlen,k;
+    bool flag = false;
     k = 0;
-    char data[255];
     ServerSocket serverSocket(port);
     serverSocket.listen();
     while(true){
         Socket clientSocket = serverSocket.accept();
+        k++;
         if(fork()==0){
             serverSocket.close();
             while(true){
-                i = clientSocket.recv(data,255);
+                char data[255];
+                memset(data,0, sizeof(data));
+                recvlen = clientSocket.recv(data,255);
                 cout<<k<<"->recv:"<<data<<endl;
-                j = clientSocket.send(data,255);
+                clientSocket.send(data,255);
                 cout<<k<<"->send:"<<data<<endl;
-                if(i<0){
+                if(recvlen<0){
+                    if (errno == EINTR){
+                        continue;
+                    }
+                    else{
+                        break;
+                    }
+                }else if (recvlen == 0){
                     break;
                 }
             }
@@ -38,8 +49,10 @@ int TcpFork::execute() {
             exit(1);
         }
         clientSocket.close();
-        k++;
-        if(k>9){
+        if (k>3){
+            flag = true;
+        }
+        if(flag){
             break;
         }
     }

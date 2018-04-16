@@ -16,13 +16,14 @@ int main() {
     clientSocket.connect(addr);
     int k = 0;
     while (true){
-    string data = "hello";
-    clientSocket.send(data.data(), data.length());
-    char data1[255];
-    clientSocket.recv(data1, 255);
-    cout<<data1<<endl;
-    k++;
-        if (k>5){
+        string data;
+        cin>>data;
+        clientSocket.send(data.data(), data.length());
+        char data1[255];
+        clientSocket.recv(data1, 255);
+        cout<<data1<<endl;
+        k++;
+        if (k>3){
             break;
         }
     }
