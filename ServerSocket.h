@@ -18,6 +18,9 @@ class ServerSocket {
 public:
     ServerSocket();
     ServerSocket(int port);
+    int getFd() {
+        return serSock;
+    }
     int bind(int port);
     int listen();
     Socket& accept();

@@ -17,6 +17,9 @@ public:
     friend class ServerSocket;
     Socket();
 //    Socket(InetAddr addr);
+    int getFd() {
+        return cliSock;
+    }
     int connect(InetAddr addr);
     int send(const void* data, size_t len);
     int recv(void* data, size_t len);
