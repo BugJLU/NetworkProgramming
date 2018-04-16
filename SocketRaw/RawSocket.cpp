@@ -12,7 +12,7 @@ RawSocket::RawSocket() {
 }
 
 void RawSocket::startCat() {
-    if((sockfd = socket(PF_PACKET, SOCK_DGRAM, htons(ETH_P_IP)) == -1)){
+    if((sockfd = socket(PF_PACKET, SOCK_DGRAM, htons(ETH_P_IP))) == -1){
         printf("socket error !");
         exit(1);
     }
@@ -74,15 +74,15 @@ void RawSocket::analyseUDP() {
 }
 
 void RawSocket::analyseICMP() {
-    printf("TCMP ------\n");
+    printf("ICMP ------\n");
     printf("type: %u\n",picmp->icmp_type);
     printf("sub code: %u\n",picmp->icmp_code);
     printData((unsigned char*)picmp + sizeof(ICMPHeader));
 }
 
 void RawSocket::printData(unsigned char *pdata) {
-    printf("Data(Application Layer): ");
-    int len = sizeof(pdata);
+    printf("Data: ");
+    int len = n - (pdata-buf);
     for(int i = 0; i<MAXDATA&&i<len; i++){
         printf("%x",pdata[i]);
     }

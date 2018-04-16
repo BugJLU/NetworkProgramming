@@ -50,8 +50,7 @@ typedef struct _icmphdr {
     unsigned short icmp_cksum;
     unsigned short icmp_id;
     unsigned short icmp_seq;
-    /* This is not the std header, but we reserve space for time */
-    unsigned short icmp_timestamp;
+    //unsigned short icmp_timestamp;
 }ICMPHeader;
 
 class RawSocket{
