@@ -7,9 +7,11 @@
 
 #include <vector>
 #include <pthread.h>
+#include <poll.h>
 #include "../Socket.h"
 
-//#define DEFAULT_SOCKNUM 1024
+#define DEFAULT_SOCKNUM 1024
+typedef struct pollfd _pollfd;
 
 class MultiSocket {
 
@@ -19,6 +21,7 @@ class MultiSocket {
 
     std::vector<Socket> sockArr;
     pthread_mutex_t mutex;
+    _pollfd sockpolls[DEFAULT_SOCKNUM];
 
 public:
     MultiSocket() {
