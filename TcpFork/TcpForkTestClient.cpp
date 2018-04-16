@@ -7,7 +7,7 @@
 using namespace std;
 
 int main() {
-    cout<<"SocketTest:"<<endl;
+    cout<<"TcpForkTestClient:"<<endl;
 
     InetAddr addr;
     addr.setIP("127.0.0.1");
@@ -17,11 +17,13 @@ int main() {
     int k = 0;
     while (true){
         string data;
+        cout<<"cin:";
         cin>>data;
         clientSocket.send(data.data(), data.length());
+        cout<<"ClientSend:"<<data<<endl;
         char data1[255];
         clientSocket.recv(data1, 255);
-        cout<<data1<<endl;
+        cout<<"ClientRecv:"<<data1<<endl;
         k++;
         if (k>3){
             break;
