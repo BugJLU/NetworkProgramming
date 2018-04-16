@@ -47,8 +47,7 @@ void* serlisten(void* arg) {
     pthread_detach(pthread_self());
 
     while(flag) {
-        Socket tmp;
-        tmp = server->accept();
+        Socket tmp = server->accept();
 
         pthread_mutex_lock(&mux);
         multiSocket->addSocket(tmp);

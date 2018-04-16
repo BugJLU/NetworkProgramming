@@ -59,9 +59,9 @@ Socket& ServerSocket::accept() {
     if (cliSock < 0) {
         throw "socket accept error";
     }
-    Socket cliSocket = Socket();
-    cliSocket.cliSock = cliSock;
-    return cliSocket;
+    Socket* cliSocket = new Socket;
+    cliSocket->cliSock = cliSock;
+    return *cliSocket;
 }
 
 int ServerSocket::close() {
