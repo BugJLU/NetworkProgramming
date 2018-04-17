@@ -10,12 +10,15 @@ set(FILE_LIB FileOperation/File.h FileOperation/File.cpp)
 # Tests:
 add_executable(SocketTest ${SOCK_LIB} SocketTest.cpp)
 add_executable(ServerSocketTest ${SOCK_LIB} ServerSocketTest.cpp)
+
+add_executable(NetworkProgrammingTest test.cpp)
 add_executable(TcpForkTest ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTest.cpp)
 add_executable(TcpForkTestCilent ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTestClient.cpp)
 add_executable(MultiTest ${SOCK_LIB} ${MULTI_LIB} Multiplexing/MultiTest.cpp)
 add_executable(EndlessClient ${SOCK_LIB} PublicTests/EndlessClient.cpp)
 add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp SocketRaw/RawSocketTest.cpp)
 add_executable(FileTest ${FILE_LIB} FileOperation/FileTest.cpp)
+add_executable(FTPServer FTP/FTPServer/Server.cpp ${SOCK_LIB} ${FILE_LIB})
 
 # Executables:
 add_executable(NetworkProgramming2Client exp2/client2.cpp ${SOCK_LIB})
