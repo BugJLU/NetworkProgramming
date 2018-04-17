@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(SOCK_LIB Socket.cpp Socket.h ServerSocket.cpp ServerSocket.h InetAddr.cpp InetAddr.h)
 set(MULTI_LIB Multiplexing/MultiSocket.cpp Multiplexing/MultiSocket.h)
 set(TCP_FORK_LIB TcpFork/TcpFork.cpp TcpFork/TcpFork.h)
+set(FILE_LIB FileOperation/File.h FileOperation/File.cpp)
 
 # Tests:
 add_executable(SocketTest ${SOCK_LIB} SocketTest.cpp)
@@ -14,6 +15,7 @@ add_executable(TcpForkTestCilent ${SOCK_LIB} ${TCP_FORK_LIB} TcpFork/TcpForkTest
 add_executable(MultiTest ${SOCK_LIB} ${MULTI_LIB} Multiplexing/MultiTest.cpp)
 add_executable(EndlessClient ${SOCK_LIB} PublicTests/EndlessClient.cpp)
 add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp SocketRaw/RawSocketTest.cpp)
+add_executable(FileTest ${FILE_LIB} FileOperation/FileTest.cpp)
 
 # Executables:
 add_executable(NetworkProgramming2Client exp2/client2.cpp ${SOCK_LIB})

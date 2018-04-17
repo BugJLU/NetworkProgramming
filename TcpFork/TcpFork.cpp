@@ -31,9 +31,7 @@ int TcpFork::execute() {
                 char data[255];
                 memset(data,0, sizeof(data));
                 recvlen = clientSocket.recv(data,255);
-                cout<<k<<"->recv:"<<data<<endl;
                 clientSocket.send(data,255);
-                cout<<k<<"->send:"<<data<<endl;
                 if(recvlen<0){
                     if (errno == EINTR){
                         continue;
@@ -44,6 +42,8 @@ int TcpFork::execute() {
                 }else if (recvlen == 0){
                     break;
                 }
+                cout<<k<<"->recv:"<<data<<endl;
+                cout<<k<<"->send:"<<data<<endl;
             }
             clientSocket.close();
             exit(1);
