@@ -8,6 +8,7 @@
 
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include "InetAddr.h"
 
 class Socket {
@@ -20,6 +21,7 @@ public:
     int getFd() {
         return cliSock;
     }
+    InetAddr& getPeerAddr();
     int connect(InetAddr addr);
     int send(const void* data, size_t len);
     int recv(void* data, size_t len);

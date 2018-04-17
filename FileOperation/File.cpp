@@ -5,7 +5,9 @@
 #include "File.h"
 
 
-File::File() {}
+File::File() {
+    this->filelength = 0;
+}
 
 File::File(const char *fname,char m) {
 //    this->filename = fname;
