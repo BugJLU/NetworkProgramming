@@ -32,7 +32,7 @@ struct ftpArg
 
     MultiSocket& commandMulti;
     MultiSocket& dataMulti;
-    map<Socket, File>& sockMap;
+    map<Socket*, File*>& sockMap;
 };
 
 void* commandThread(void*);
