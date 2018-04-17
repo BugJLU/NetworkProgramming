@@ -29,8 +29,14 @@ int main(){
 //        memset(buffer, 0, sizeof(buffer));
     }while(il == length);
 
+    cout<<"infile:"<<ifile.getFilelength()<<endl;
+    cout<<"outfile:"<<ofile.getFilelength()<<endl;
+
     ifile.close();
     ofile.close();
+
+    cout<<"infile:"<<ifile.getFilelength()<<endl;
+    cout<<"outfile:"<<ofile.getFilelength()<<endl;
 
     /*WriteTest*/
 

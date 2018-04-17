@@ -10,12 +10,20 @@ File::File() {}
 File::File(const char *fname,char m) {
 //    this->filename = fname;
 //    this->mode = m;
+    this->filelength = 0;
     this->open(fname, m);
+}
+
+int File::getFilelength() {
+    return filelength;
 }
 
 int File::open(const char *fname,char m) {
     if(m==FILE_IN) {
         ifs.open(fname,std::ios::in|std::ios::binary);
+        ifs.seekg(0,std::ios::end);
+        filelength = ifs.tellg();
+        ifs.seekg(0,std::ios::beg);
     }else if(m==FILE_OUT){
         ofs.open(fname,std::ios::out|std::ios::trunc|std::ios::binary);
     }else{
@@ -43,6 +51,7 @@ int File::close() {
 //        throw "close error";
         return -1;
     }
+    filelength = 0;
 //    flag = false;
     return 0;
 }
@@ -74,6 +83,7 @@ int File::write(const char *buffer, int length) {
         ofs.write(buffer,length);
         cur_end = ofs.tellp();
         l = cur_end - cur_start;
+        filelength = cur_end;
     }else{
 //        cout<<"No open outfile!"<<endl;
 //        throw "no output file";

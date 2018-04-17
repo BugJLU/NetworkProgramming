@@ -20,11 +20,13 @@ private:
 //    const char *filename;
 //    char mode;
 //    bool flag;
+    int filelength;
     std::ofstream ofs;
     std::ifstream ifs;
 public:
     File();
     File(const char *fname,char m);
+    int getFilelength();
     int open(const char *fname,char m);
     int close();
     int read(char *buffer,int length);
