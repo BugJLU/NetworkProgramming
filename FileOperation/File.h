@@ -27,6 +27,12 @@ public:
     File();
     File(const char *fname,char m);
     int getFilelength();
+    bool oeof() {
+        return ofs.eof();
+    };
+    bool ieof() {
+        return ifs.eof();
+    }
     int open(const char *fname,char m);
     int close();
     int read(char *buffer,int length);

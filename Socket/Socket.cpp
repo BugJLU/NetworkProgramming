@@ -48,7 +48,15 @@ int Socket::close() {
     return socketAssist::_close(cliSock);
 }
 
-
+InetAddr &Socket::getPeerAddr() {
+    struct sockaddr_in sin;
+    socklen_t len = sizeof(struct sockaddr);
+    getpeername(cliSock, (struct sockaddr*)&sin, &len);
+    InetAddr addr;
+    addr.setPort(sin.sin_port);
+    addr.setIP(inet_ntoa(*(&sin.sin_addr)));
+    return addr;
+}
 
 
 //Socket::Socket(InetAddr addr) {

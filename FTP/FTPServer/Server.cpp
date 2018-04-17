@@ -13,6 +13,7 @@
 
 using namespace std;
 
+#define SLICE_LEN 1024
 
 pthread_mutex_t commandMutex;
 pthread_mutex_t dataMutex;
@@ -20,7 +21,7 @@ pthread_mutex_t mapMutex;
 
 MultiSocket commandMulti;
 MultiSocket dataMulti;
-map<Socket, File> sockMap;
+map<Socket*, File*> sockMap;
 
 struct ftpArg
 {
@@ -30,7 +31,7 @@ struct ftpArg
 
     MultiSocket& commandMulti;
     MultiSocket& dataMulti;
-    map<Socket, File>& sockMap;
+    map<Socket*, File*>& sockMap;
 };
 
 void* commandThread(void*);
@@ -60,12 +61,31 @@ void* commandThread(void* arg)
 {
     pthread_detach(pthread_self());
     auto farg = (ftpArg*)arg;
+    vector<Socket> in, out;
+    char* buf = new char[SLICE_LEN];
     while (1) {
-
         pthread_mutex_lock(&farg->dataMutex);
-
+        farg->dataMulti.listenAll(in, out);
         pthread_mutex_unlock(&farg->dataMutex);
+        for (int i = 0; i < out.size(); ++i) {
+            Socket& sock = in[i];
+            auto fileToSend = farg->sockMap[&sock];
+            auto len = fileToSend->read(buf, SLICE_LEN);
+            sock.send(buf, len);
+            if (fileToSend->ieof()) {
+
+                farg->sockMap.erase(&sock);
+                sock.close();
+                delete &sock;
+                fileToSend->close();
+                delete fileToSend;
+                // TODO： potential risk!!
+                in.erase(in.begin()+i);
+                --i;
+            }
+        }
     }
+    delete[] buf;
 }
 
 void* dataThread(void* arg)
