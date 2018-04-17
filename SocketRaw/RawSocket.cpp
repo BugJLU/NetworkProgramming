@@ -46,7 +46,7 @@ void RawSocket::catching() {
             picmp = (ICMPHeader*)(buf + iplen);
             analyseICMP();
         }else{
-            printf("\nother protocol !\n");
+            printf("\nother protocol !\n\n");
         }
         //printf("\n\n");
     }
