@@ -11,12 +11,13 @@ struct FileInfo{
     char mode;
     char ID;
     char fileNameLen;
-    char fileName[fileNameLen];
-    int  fileLen;
+    char *fileName;
+    uint32_t fileLen;
 };
 
 struct FileStatus{
     char ID;
+    //TODO
     bool status;
 };
 
@@ -30,13 +31,13 @@ private:
 
 public:
 
-    ClientFileRecvSocket(){}
-    ClientFileRecvSocket(Socket s){}
-    int execute(){}
-    int setFileInfo(char *fi){}
-    FileInfo getFileInfo(){}
-    int setFileStatus(){}
-    FileStatus getFileStatus(){}
+    ClientFileRecvSocket();
+    ClientFileRecvSocket(Socket s);
+    int execute();
+    int setFileInfo();
+    FileInfo getFileInfo();
+    int setFileStatus();
+    FileStatus getFileStatus();
 };
 
 
