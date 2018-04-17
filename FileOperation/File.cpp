@@ -4,15 +4,16 @@
 
 #include "File.h"
 
+
 File::File() {}
 
-File::File(string fname,char m) {
+File::File(const char *fname,char m) {
     this->filename = fname;
     this->mode = m;
-    open(filename,mode);
+    this->open(filename,mode);
 }
 
-int File::open(string fname,char m) {
+int File::open(const char *fname,char m) {
     if(m=='i') {
         ifs.open(fname,ios::in|ios::binary);
     }else if(m=='o'){
@@ -21,6 +22,7 @@ int File::open(string fname,char m) {
         cout<<"Unknown open mode"<<endl;
     }
     if(ifs.is_open()||ofs.is_open()){
+        flag = true;
         return 0;
     }else{
         cout<<"File Open Error!"<<endl;
@@ -35,7 +37,7 @@ int File::close() {
     if(ofs.is_open()){
         ofs.close();
     }
-    if(!ifs.is_open()&&!ofs.is_open()){
+    if(ifs.is_open()|ofs.is_open()){
         cout<<"Close Error!"<<endl;
         return -1;
     }
@@ -44,21 +46,34 @@ int File::close() {
 
 int File::read(char *buffer, int length) {
     //TODO len of read
+    int l,cur,end;
     if(ifs.is_open()){
+        cur = ifs.tellg();
+        ifs.seekg(0,ios::end);
+        end = ifs.tellg();
+        l = end -cur;
+        ifs.seekg(cur);
         ifs.read(buffer,length);
     }else{
         cout<<"No open infile!"<<endl;
         return -1;
     }
-    return 0;
+    if(l>=length){
+        l = length;
+    }
+    return l;
 }
 
 int File::write(const char *buffer, int length) {
+    int l,cur_start,cur_end;
     if(ofs.is_open()){
+        cur_start = ofs.tellp();
         ofs.write(buffer,length);
+        cur_end = ofs.tellp();
+        l = cur_end - cur_start;
     }else{
         cout<<"No open outfile!"<<endl;
         return -1;
     }
-    return 0;
+    return l;
 }

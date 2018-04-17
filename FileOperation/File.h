@@ -10,18 +10,22 @@
 #include <fstream>
 #include <cstdlib>
 
+#define IN 'i'
+#define OUT 'o'
+
 using namespace std;
 
 class File {
 private:
-    string filename;
+    const char *filename;
     char mode;
+    bool flag;
     ofstream ofs;
     ifstream ifs;
 public:
     File();
-    File(string fname,char m);
-    int open(string fname,char m);
+    File(const char *fname,char m);
+    int open(const char *fname,char m);
     int close();
     int read(char *buffer,int length);
     int write(const char *buffer,int length);
