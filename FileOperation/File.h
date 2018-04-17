@@ -10,18 +10,18 @@
 #include <fstream>
 #include <cstdlib>
 
-#define IN 'i'
-#define OUT 'o'
+#define FILE_IN 0b0001
+#define FILE_OUT 0b0010
 
-using namespace std;
+//using namespace std;
 
 class File {
 private:
-    const char *filename;
-    char mode;
-    bool flag;
-    ofstream ofs;
-    ifstream ifs;
+//    const char *filename;
+//    char mode;
+//    bool flag;
+    std::ofstream ofs;
+    std::ifstream ifs;
 public:
     File();
     File(const char *fname,char m);
