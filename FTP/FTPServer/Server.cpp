@@ -22,12 +22,25 @@ MultiSocket commandMulti;
 MultiSocket dataMulti;
 map<Socket, File> sockMap;
 
+struct ftpArg
+{
+    pthread_mutex_t commandMutex;
+    pthread_mutex_t dataMutex;
+    pthread_mutex_t mapMutex;
+
+    MultiSocket commandMulti;
+    MultiSocket dataMulti;
+    map<Socket, File> sockMap;
+};
+
 void* commandThread(void*);
 void* dataThread(void*);
 
 
 int main()
 {
+    ServerSocket server = ServerSocket(7777);
+    pthread_mutex_init(&commandMulti,NULL);
     return 0;
 }
 
