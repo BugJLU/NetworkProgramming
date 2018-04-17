@@ -46,7 +46,6 @@ int File::close() {
 }
 
 int File::read(char *buffer, int length) {
-    //TODO len of read
     int l,cur,end;
     if(ifs.is_open()){
         cur = ifs.tellg();

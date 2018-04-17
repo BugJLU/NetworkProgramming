@@ -16,8 +16,8 @@ int main(){
 
     /*ReadTest*/
 
-    char *ifname = "ReadTest.txt";
-    char *ofname = "WriteTest.txt";
+    char *ifname = "testpic.jpg";
+    char *ofname = "test.jpg";
 
     File ifile(ifname,IN);
     File ofile(ofname,OUT);
