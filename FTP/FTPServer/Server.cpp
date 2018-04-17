@@ -39,14 +39,18 @@ void* dataThread(void*);
 
 int main()
 {
-    ServerSocket server = ServerSocket(7777);
-    pthread_mutex_init(&commandMulti,NULL);
     return 0;
 }
 
 void* commandThread(void* arg)
 {
+    auto farg = (ftpArg*)arg;
+    while (1) {
 
+        pthread_mutex_lock(&farg->dataMutex);
+
+        pthread_mutex_unlock(&farg->dataMutex);
+    }
 }
 
 void* dataThread(void* arg)

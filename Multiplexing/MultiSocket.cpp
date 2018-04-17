@@ -30,6 +30,9 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
 
     int asize = sockArr.size();
 
+    inSocks.clear();
+    outSocks.clear();
+
     for (int i = 0; i < asize; ++i) {
         sockpolls[i].fd = sockArr[i].getFd();
         sockpolls[i].events = POLLIN | POLLOUT;
