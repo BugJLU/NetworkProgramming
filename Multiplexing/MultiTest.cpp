@@ -26,7 +26,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "MultiSocket.h"
-#include "../ServerSocket.h"
+#include "../Socket/ServerSocket.h"
 
 using namespace std;
 

@@ -8,7 +8,7 @@
 #include <vector>
 #include <pthread.h>
 #include <poll.h>
-#include "../Socket.h"
+#include "../Socket/Socket.h"
 
 #define DEFAULT_SOCKNUM 1024
 typedef struct pollfd _pollfd;

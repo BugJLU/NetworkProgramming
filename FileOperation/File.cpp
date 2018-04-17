@@ -8,24 +8,25 @@
 File::File() {}
 
 File::File(const char *fname,char m) {
-    this->filename = fname;
-    this->mode = m;
-    this->open(filename,mode);
+//    this->filename = fname;
+//    this->mode = m;
+    this->open(fname, m);
 }
 
 int File::open(const char *fname,char m) {
-    if(m=='i') {
-        ifs.open(fname,ios::in|ios::binary);
-    }else if(m=='o'){
-        ofs.open(fname,ios::out|ios::trunc|ios::binary);
+    if(m==FILE_IN) {
+        ifs.open(fname,std::ios::in|std::ios::binary);
+    }else if(m==FILE_OUT){
+        ofs.open(fname,std::ios::out|std::ios::trunc|std::ios::binary);
     }else{
-        cout<<"Unknown open mode"<<endl;
+//        cout<<"Unknown open mode"<<endl;
+        throw "Unknown open mode";
     }
     if(ifs.is_open()||ofs.is_open()){
-        flag = true;
+//        flag = true;
         return 0;
     }else{
-        cout<<"File Open Error!"<<endl;
+//        cout<<"File Open Error!"<<endl;
         return -1;
     }
 }
@@ -38,10 +39,11 @@ int File::close() {
         ofs.close();
     }
     if(ifs.is_open()|ofs.is_open()){
-        cout<<"Close Error!"<<endl;
+//        cout<<"Close Error!"<<endl;
+//        throw "close error";
         return -1;
     }
-    flag = false;
+//    flag = false;
     return 0;
 }
 
@@ -49,13 +51,14 @@ int File::read(char *buffer, int length) {
     int l,cur,end;
     if(ifs.is_open()){
         cur = ifs.tellg();
-        ifs.seekg(0,ios::end);
+        ifs.seekg(0,std::ios::end);
         end = ifs.tellg();
         l = end -cur;
         ifs.seekg(cur);
         ifs.read(buffer,length);
     }else{
-        cout<<"No open infile!"<<endl;
+//        cout<<"No open infile!"<<endl;
+//        throw "no input file";
         return -1;
     }
     if(l>=length){
@@ -72,7 +75,8 @@ int File::write(const char *buffer, int length) {
         cur_end = ofs.tellp();
         l = cur_end - cur_start;
     }else{
-        cout<<"No open outfile!"<<endl;
+//        cout<<"No open outfile!"<<endl;
+//        throw "no output file";
         return -1;
     }
     return l;

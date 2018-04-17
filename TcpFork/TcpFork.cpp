@@ -5,8 +5,8 @@
 #include <iostream>
 #include <cstring>
 #include "TcpFork.h"
-#include "../Socket.h"
-#include "../ServerSocket.h"
+#include "../Socket/Socket.h"
+#include "../Socket/ServerSocket.h"
 
 using namespace std;
 

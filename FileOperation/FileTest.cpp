@@ -19,14 +19,14 @@ int main(){
     char *ifname = "testpic.jpg";
     char *ofname = "test.jpg";
 
-    File ifile(ifname,IN);
-    File ofile(ofname,OUT);
+    File ifile(ifname,FILE_IN);
+    File ofile(ofname,FILE_OUT);
 
     do{
         il = ifile.read(buffer, length);  //eof->"/n"
         ol = ofile.write(buffer, il);
         cout << il << ":" << buffer << ":" << ol << endl;
-        memset(buffer, 0, sizeof(buffer));
+//        memset(buffer, 0, sizeof(buffer));
     }while(il == length);
 
     ifile.close();

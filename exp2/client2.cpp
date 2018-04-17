@@ -5,8 +5,8 @@
 #include <cstring>
 #include <zconf.h>
 #include <iostream>
-#include "../InetAddr.h"
-#include "../Socket.h"
+#include "../Socket/InetAddr.h"
+#include "../Socket/Socket.h"
 using namespace std;
 
 void* send_msg(void* arg);

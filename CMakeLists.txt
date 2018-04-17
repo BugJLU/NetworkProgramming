@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 project(NetworkProgramming)
 
 set(CMAKE_CXX_STANDARD 11)
-set(SOCK_LIB Socket.cpp Socket.h ServerSocket.cpp ServerSocket.h InetAddr.cpp InetAddr.h)
+set(SOCK_LIB Socket/Socket.cpp Socket/Socket.h Socket/ServerSocket.cpp Socket/ServerSocket.h Socket/InetAddr.cpp Socket/InetAddr.h)
 set(MULTI_LIB Multiplexing/MultiSocket.cpp Multiplexing/MultiSocket.h)
 set(TCP_FORK_LIB TcpFork/TcpFork.cpp TcpFork/TcpFork.h)
 set(FILE_LIB FileOperation/File.h FileOperation/File.cpp)
