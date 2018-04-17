@@ -41,6 +41,7 @@ int File::close() {
         cout<<"Close Error!"<<endl;
         return -1;
     }
+    flag = false;
     return 0;
 }
 
