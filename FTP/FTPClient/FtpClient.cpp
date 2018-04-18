@@ -25,6 +25,9 @@ void FtpClient::start() {
         printf("pthread data create error");
         exit(-1);
     }
+    pthread_join(cmd_tid,NULL);
+    pthread_join(data_tid,NULL);
+
 }
 
 void* FtpClient::processCmd(void *arg) {
