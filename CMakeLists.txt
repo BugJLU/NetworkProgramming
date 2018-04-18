@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 project(NetworkProgramming)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpthread")
 set(SOCK_LIB Socket/Socket.cpp Socket/Socket.h Socket/ServerSocket.cpp Socket/ServerSocket.h Socket/InetAddr.cpp Socket/InetAddr.h)
 set(MULTI_LIB Multiplexing/MultiSocket.cpp Multiplexing/MultiSocket.h)
 set(TCP_FORK_LIB TcpFork/TcpFork.cpp TcpFork/TcpFork.h)
@@ -30,4 +31,4 @@ find_package(Threads REQUIRED)
 target_link_libraries(NetworkProgramming2Client Threads::Threads)
 target_link_libraries(NetworkProgramming2Server Threads::Threads)
 target_link_libraries(MultiTest Threads::Threads)
-
+target_link_libraries(FTPClientTest Threads::Threads)

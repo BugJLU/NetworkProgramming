@@ -1,7 +1,7 @@
 //
 // Created by blacksun on 18-4-18.
 //
-#include"FtpClient.h
+#include"FtpClient.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -109,6 +109,6 @@ void* FtpClient::processData(void *arg) {
 }
 
 void* FtpClient::processTrans(void *arg) {
-    int newsockfd = (int)arg;
+    int newsockfd = *((int*)arg);
     printf("get new sockfd:%d",newsockfd);
 }

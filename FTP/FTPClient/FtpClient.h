@@ -27,9 +27,9 @@ public:
 private:
     static std::queue<FileRecvANS> FRAqueue;
     struct hostent* server;
-    void* processCmd(void * arg);
-    void* processData(void * arg);
-    void* processTrans(void * arg);
+    static void* processCmd(void * arg);
+    static void* processData(void * arg);
+    static void* processTrans(void * arg);
 
 
 };
