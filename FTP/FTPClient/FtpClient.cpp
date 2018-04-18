@@ -16,7 +16,8 @@
 FtpClient::FtpClient(char*server) {
     this->server = gethostbyname(server);
     srand((int)time(0));
-    portno = (unsigned short)(rand() % 65536);
+    //portno = (unsigned short)(rand() % 65536);
+    portno = 53687;
 }
 
 void FtpClient::start() {
