@@ -29,12 +29,16 @@ int ClientFileRecvSocket::execute() {
     int openflag = ofile.open(fInfo.fileName,FILE_OUT);
     //TODO provide error information
     if(openflag == 0) {
+        std::cout<<"file recv start"<<std::endl;
         while (recv_len < fInfo.fileLen) {
             uint32_t cur_len = cInfo.serverSocket.recv(buffer, BUFFER_LENGTH);
             ofile.write(buffer,cur_len);
             recv_len = recv_len + cur_len;
         }
+        std::cout<<"file recv end"<<std::endl;
         ofile.close();
+    }else{
+        std::cout<<"file open fail"<<std::endl;
     }
     /*set status to this*/
     if(recv_len == fInfo.fileLen){
@@ -55,17 +59,17 @@ int ClientFileRecvSocket::execute() {
 int ClientFileRecvSocket::setFileInfo() {
     /*read mode,id,fileNameLength*/
     char buffer[3];
-    cInfo.serverSocket.recv(buffer,3);
+    int i =cInfo.serverSocket.recv(buffer,3);
     fInfo.mode = buffer[0];
     fInfo.ID = buffer[1];
     fInfo.fileNameLen = buffer[2];
     /*read file name*/
-    char fname[fInfo.fileNameLen];
+    char *fname = new char[fInfo.fileNameLen];
     cInfo.serverSocket.recv(fname,fInfo.fileNameLen);
     fInfo.fileName = fname;
     /*read file length*/
     char flen[4];
-    cInfo.serverSocket.recv(flen,4);
+    int j = cInfo.serverSocket.recv(flen,4);
     uint32_t l = 0;
 
     for (int i = 0; i < 4; ++i) {
@@ -73,7 +77,9 @@ int ClientFileRecvSocket::setFileInfo() {
     }
 
     fInfo.fileLen = l;
-
+    if(i==3&&j==4){
+        std::cout<<"set file info success"<<std::endl;
+    }
     return 0;
 }
 
