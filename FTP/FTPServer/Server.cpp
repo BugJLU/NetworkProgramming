@@ -65,7 +65,7 @@ int main()
     server.listen();
     while (flag)
     {
-        Socket client = server.accept();
+        Socket& client = server.accept();
         cout<<"1 client connected"<<endl;
 //        pthread_mutex_lock(&g_commandMutex);
         g_commandMulti.addSocket(&client);
