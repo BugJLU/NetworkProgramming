@@ -4,7 +4,7 @@
 #include "FtpClient.h"
 
 int main(){
-    FtpClient fc("localhost");
+    FtpClient fc("192.168.31.32");
 
     fc.start();
 
