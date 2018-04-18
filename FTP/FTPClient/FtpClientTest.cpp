@@ -5,6 +5,6 @@
 
 int main(){
     FtpClient fc("localhost");
-    //fc.start();
+    fc.start();
     return 0;
 }
