@@ -66,6 +66,7 @@ int main()
     while (flag)
     {
         Socket client = server.accept();
+        cout<<"1 client connected"<<endl;
 //        pthread_mutex_lock(&g_commandMutex);
         g_commandMulti.addSocket(client);
 //        pthread_mutex_unlock(&g_commandMutex);
@@ -83,19 +84,23 @@ void* commandThread(void* arg)
     char response[5];
     while(flag)
     {
-        pthread_mutex_lock(&farg->commandMutex);
+//        pthread_mutex_lock(&farg->commandMutex);
         farg->commandMulti.listenAll(in, out);
-        pthread_mutex_unlock(&farg->commandMutex);
+//        pthread_mutex_unlock(&farg->commandMutex);
         for(int i = 0; i < in.size(); i++)
         {
             in[i].recv(request,300);
+            cout<<"request accepted: "; // TODO
             if(request[0] == 0)
             {
+                cout<<"GET ";   // TODO
                 char Id = request[1];
                 unsigned  int port = request[2] << 8 + request[3];
                 unsigned  int length = request[4];
-                char filename[length];
+                char filename[length+1];
+                memset(filename, 0, length+1);
                 memcpy(filename, request + 5, length);
+                cout<<filename<<endl;   // TODO
                 File* file = new File();
                 response[0] = Id;
                 if(file->open(filename, FILE_IN) != -1)
