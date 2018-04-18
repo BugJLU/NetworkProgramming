@@ -8,24 +8,41 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-#include <queue>
+#include<vector>
+#include "../../Socket/Socket.h"
 
 #define DATA_PORT 2325
 #define SERV_PORT 7777
 #define ERROR -1
 
-typedef struct file_recv_ans{
-    unsigned char id;
-    char filename[256];
-    int status;
-} FileRecvANS;
+struct FileInfo{
+    char mode;
+    char ID;
+    char fileNameLen;
+    char *fileName;
+    uint32_t fileLen;
+};
+
+struct FileStatus{
+    char ID;
+    char *fileName;
+    bool status;
+};
+
+typedef struct {
+    Socket serverSocket;
+    std::vector<FileStatus> *fsQueue;
+    pthread_mutex_t *qMutex;
+
+}Info;
 
 class FtpClient{
 public:
+
     FtpClient(char*server);
     void start();
 private:
-    static std::queue<FileRecvANS> FRAqueue;
+    static std::vector<FileStatus>* fsQueue;
     struct hostent* server;
     static void* processCmd(void * arg);
     static void* processData(void * arg);
@@ -33,5 +50,6 @@ private:
 
 
 };
+
 
 #endif //NETWORKPROGRAMMING_FTPCLIENT_H

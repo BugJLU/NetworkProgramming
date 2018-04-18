@@ -47,6 +47,7 @@ void* FtpClient::processCmd(void *arg) {
     unsigned char cmdcount = 0;
     while(true){
         printf("Please enter the command: ");
+
         scanf("%s",cmd);
         if(strcmp(cmd,"get")){
             scanf("%s",filename);
@@ -102,13 +103,21 @@ void* FtpClient::processData(void *arg) {
         printf("accept a connect(addr:%s, port:%d)",
                inet_ntoa(cli_addr.sin_addr),cli_addr.sin_port);
         pthread_t trans_tid;
-        pthread_create(&trans_tid,NULL,processTrans,(void*)newsockfd);
+        Info info;
+        Socket accSocket;
+        accSocket.setFd(newsockfd);
+        pthread_mutex_init(info.qMutex,NULL);
+        info.serverSocket = accSocket;
+        info.fsQueue = fsQueue;
+        pthread_create(&trans_tid,NULL,processTrans,(void*)&info);
     }
     close(sockfd);
     return 0;
 }
 
 void* FtpClient::processTrans(void *arg) {
-    int newsockfd = *((int*)arg);
-    printf("get new sockfd:%d",newsockfd);
+    Info* info = (Info*)(arg);
+
 }
+
+std::vector<FileStatus>* FtpClient::fsQueue = new std::vector<FileStatus>;

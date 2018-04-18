@@ -21,6 +21,7 @@ public:
     int getFd() {
         return cliSock;
     }
+    void setFd(int sockfd);
     InetAddr& getPeerAddr();
     int connect(InetAddr addr);
     int send(const void* data, size_t len);

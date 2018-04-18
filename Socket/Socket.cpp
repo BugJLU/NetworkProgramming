@@ -31,6 +31,9 @@ Socket::Socket() {
         throw "socket init error";
     }
 }
+void Socket::setFd(int sockfd) {
+    cliSock = sockfd;
+}
 
 int Socket::connect(InetAddr addr) {
     return socketAssist::_connect(cliSock, (struct sockaddr *)&addr.getAddress(), sizeof(struct sockaddr));
