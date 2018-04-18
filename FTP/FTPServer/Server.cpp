@@ -66,7 +66,9 @@ int main()
     while (flag)
     {
         Socket client = server.accept();
+//        pthread_mutex_lock(&g_commandMutex);
         g_commandMulti.addSocket(client);
+//        pthread_mutex_unlock(&g_commandMutex);
     }
     return 0;
 }
@@ -96,7 +98,7 @@ void* commandThread(void* arg)
                 memcpy(filename, request + 5, length);
                 File* file = new File();
                 response[0] = Id;
-                if(file->open(filename, 'r') != -1)
+                if(file->open(filename, FILE_IN) != -1)
                 {
                     int fileLength = file->getFilelength();
                     for(int j = 4; j > 0; j--)
