@@ -83,6 +83,7 @@ void* commandThread(void* arg)
     {
         pthread_mutex_lock(&farg->commandMutex);
         farg->commandMulti.listenAll(in, out);
+        pthread_mutex_unlock(&farg->commandMutex);
         for(int i = 0; i < in.size(); i++)
         {
             in[i].recv(request,300);
@@ -143,7 +144,6 @@ void* commandThread(void* arg)
 
             }
         }
-        pthread_mutex_unlock(&farg->commandMutex);
     }
 }
 
