@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include<vector>
 #include "../../Socket/Socket.h"
+#include "ClientFileRecvSocket.h"
 
 #define DATA_PORT 2325
 #define SERV_PORT 7777

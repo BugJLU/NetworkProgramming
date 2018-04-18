@@ -7,31 +7,32 @@
 
 #include "../../Socket/Socket.h"
 #include "../../FileOperation/File.h"
+#include "FtpClient.h"
 #include <vector>
 #include <mutex>
 
 #define BUFFER_LENGTH 256
 
-struct FileInfo{
-    char mode;
-    char ID;
-    char fileNameLen;
-    char *fileName;
-    uint32_t fileLen;
-};
-
-struct FileStatus{
-    char ID;
-    char *fileName;
-    bool status;
-};
-
-typedef struct {
-    Socket serverSocket;
-    std::vector<FileStatus> *fsQueue;
-    pthread_mutex_t *qMutex;
-
-}Info;
+//struct FileInfo{
+//    char mode;
+//    char ID;
+//    char fileNameLen;
+//    char *fileName;
+//    uint32_t fileLen;
+//};
+//
+//struct FileStatus{
+//    char ID;
+//    char *fileName;
+//    bool status;
+//};
+//
+//typedef struct {
+//    Socket serverSocket;
+//    std::vector<FileStatus> *fsQueue;
+//    pthread_mutex_t *qMutex;
+//
+//}Info;
 
 
 class ClientFileRecvSocket {

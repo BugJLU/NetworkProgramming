@@ -118,6 +118,7 @@ void* FtpClient::processData(void *arg) {
 
 void* FtpClient::processTrans(void *arg) {
     Info* info = (Info*)(arg);
+    ClientFileRecvSocket cfrs(info);
 
 }
 /*bool FtpClient::init() {
