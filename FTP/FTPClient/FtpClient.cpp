@@ -79,7 +79,7 @@ void* FtpClient::processCmd(void *arg) {
                 send_buffer[4+i] = filename[i-1];
             }
             send_buffer[5+filelen] = '\0';
-            if((n = write(sockfd, send_buffer,strlen(send_buffer)))<0){
+            if((n = write(sockfd, send_buffer,5+filelen))<0){
                 perror("cmd:Error writing to socket");
                 break;
             }
