@@ -165,7 +165,7 @@ void* dataThread(void* arg)
         farg->dataMulti.listenAll(in, out);
         pthread_mutex_unlock(&farg->dataMutex);
         for (int i = 0; i < out.size(); ++i) {
-            Socket& sock = in[i];
+            Socket& sock = out[i];
             auto fileToSend = farg->sockMap[&sock];
             auto len = fileToSend->read(buf, SLICE_LEN);
             sock.send(buf, len);
@@ -177,7 +177,7 @@ void* dataThread(void* arg)
                 fileToSend->close();
                 delete fileToSend;
                 // TODO： potential risk!!
-                in.erase(in.begin()+i);
+                out.erase(out.begin()+i);
                 --i;
             }
         }
