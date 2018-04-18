@@ -28,6 +28,7 @@ void FtpClient::start() {
     pthread_join(cmd_tid,NULL);
     pthread_join(data_tid,NULL);
 
+
 }
 
 void* FtpClient::processCmd(void *arg) {
@@ -82,9 +83,10 @@ void* FtpClient::processCmd(void *arg) {
             send_buffer[5+filelen] = '\0';
             if((n = write(sockfd, send_buffer,5+filelen))<0){
                 perror("cmd:Error writing to socket");
+                running = false;
                 break;
             }
-            if((n = read(sockfd,recv_buffer,sizeof(recv_buffer)))!=5){
+            if((n = read(sockfd, recv_buffer,sizeof(recv_buffer)))!=5){
                 printf("get file error\n");
             }else{
                 unsigned char id = recv_buffer[0];
@@ -130,7 +132,7 @@ void* FtpClient::processData(void *arg) {
             perror("data:Error on accept");
             break;
         }
-        printf("accept a connect(addr:%s, port:%d)",
+        printf("accept a connect(addr:%s, port:%d)\n",
                inet_ntoa(cli_addr.sin_addr),cli_addr.sin_port);
         pthread_t trans_tid;
         Info info;
@@ -158,7 +160,7 @@ void* FtpClient::processTrans(void *arg) {
 
 }*/
 //bool FtpClient::__init = FtpClient::init();
-//pthread_mutex_t* FtpClient::qMutex;
+//pthread_mutex_t FtpClient::qMutex = PTHREAD_MUTEX_INITIALIZER;
 std::vector<FileStatus>* FtpClient::fsQueue = new std::vector<FileStatus>;
 bool FtpClient::running = true;
 

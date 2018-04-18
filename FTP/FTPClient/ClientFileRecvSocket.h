@@ -18,7 +18,7 @@ struct FileInfo{
     char ID;
     char fileNameLen;
     char *fileName;
-    uint32_t fileLen;
+    int fileLen;
 };
 
 struct FileStatus{
@@ -27,10 +27,10 @@ struct FileStatus{
     bool status;
 };
 
-typedef struct {
+typedef struct _info{
     Socket serverSocket;
     std::vector<FileStatus> *fsQueue;
-    pthread_mutex_t *qMutex;
+    pthread_mutex_t* qMutex;
 
 }Info;
 
