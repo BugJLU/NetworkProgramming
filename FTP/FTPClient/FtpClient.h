@@ -12,7 +12,7 @@
 #include "../../Socket/Socket.h"
 #include "ClientFileRecvSocket.h"
 
-#define DATA_PORT 2325
+//#define DATA_PORT 2325
 #define SERV_PORT 7777
 #define ERROR -1
 
@@ -43,7 +43,7 @@ public:
     void start();
 private:
     static bool running;
-
+    static unsigned short portno;
     //static bool __init;
     //static bool init();
     static std::vector<FileStatus>* fsQueue;

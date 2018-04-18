@@ -25,8 +25,8 @@ void FtpClient::start() {
         printf("pthread data create error");
         exit(-1);
     }
-    pthread_join(cmd_tid,NULL);
     pthread_join(data_tid,NULL);
+    pthread_join(cmd_tid,NULL);
 
 
 }
@@ -74,8 +74,9 @@ void* FtpClient::processCmd(void *arg) {
 
         if((filelen = strlen(filename))>0){
             send_buffer[1] = cmdcount;
-            send_buffer[2] = DATA_PORT>>8;
-            send_buffer[3] = DATA_PORT & 0x00ff;
+            while(portno == 0);
+            send_buffer[2] = portno>>8;
+            send_buffer[3] = portno & 0x00ff;
             send_buffer[4] = filelen;
             for(int i = 1;i<=filelen;i++){
                 send_buffer[4+i] = filename[i-1];
@@ -120,11 +121,12 @@ void* FtpClient::processData(void *arg) {
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(DATA_PORT);
+    serv_addr.sin_port = htons(portno);
     if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0){
         perror("data:Error on binding");
         exit(1);
     }
+    portno = serv_addr.sin_port;
     listen(sockfd,MAXACC);
     socklen_t clilen = sizeof(cli_addr);
     while(running){
@@ -163,5 +165,6 @@ void* FtpClient::processTrans(void *arg) {
 //pthread_mutex_t FtpClient::qMutex = PTHREAD_MUTEX_INITIALIZER;
 std::vector<FileStatus>* FtpClient::fsQueue = new std::vector<FileStatus>;
 bool FtpClient::running = true;
+unsigned short FtpClient::portno = 0;
 
 
