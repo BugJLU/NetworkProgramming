@@ -16,12 +16,14 @@
 FtpClient::FtpClient(char*server) {
     this->server = gethostbyname(server);
     srand((int)time(0));
-    portno = (unsigned short)(rand() % 65536);
+    //portno = (unsigned short)(rand() % 65536);
+    portno = 53687;
 }
 
 void FtpClient::start() {
 
     pthread_t cmd_tid, data_tid;
+    printf("client listen on port:%d\n",portno);
     if(pthread_create(&cmd_tid,NULL,processCmd,(void*)server)!=0){
         printf("pthread cmd create error");
         exit(-1);
