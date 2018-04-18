@@ -115,6 +115,9 @@ void* commandThread(void* arg)
                     InetAddr clientAddress = in[i].getPeerAddr();
                     clientAddress.setPort(port);
                     Socket* client = new Socket();
+                    pthread_mutex_lock(&farg->mapMutex);
+                    farg->sockMap.insert(pair<Socket*,File*>(client, file));
+                    pthread_mutex_unlock(&farg->mapMutex);
                     if( client->connect(clientAddress) != -1 )
                     {
                         //unsigned int fileLength = file->getFilelength();
@@ -133,9 +136,6 @@ void* commandThread(void* arg)
                         }
                         client->send(serverrequest, 3+length+fileLength);
                     }
-                    pthread_mutex_lock(&farg->mapMutex);
-                    farg->sockMap.insert(pair<Socket*,File*>(client, file));
-                    pthread_mutex_unlock(&farg->mapMutex);
                     pthread_mutex_lock(&farg->dataMutex);
                     farg->dataMulti.addSocket(*client);
                     pthread_mutex_unlock(&farg->dataMutex);
