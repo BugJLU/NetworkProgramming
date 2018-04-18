@@ -115,27 +115,28 @@ void* commandThread(void* arg)
                     InetAddr clientAddress = in[i].getPeerAddr();
                     clientAddress.setPort(port);
                     Socket* client = new Socket();
+                    pthread_mutex_lock(&farg->mapMutex);
+                    farg->sockMap.insert(pair<Socket*,File*>(client, file));
+                    pthread_mutex_unlock(&farg->mapMutex);
                     if( client->connect(clientAddress) != -1 )
                     {
                         //unsigned int fileLength = file->getFilelength();
                         char serverrequest[3+length+fileLength];
-                        serverrequest[1] = 0;
-                        serverrequest[2] = Id;
-                        serverrequest[3] = length;
+                        serverrequest[0] = 0;
+                        serverrequest[1] = Id;
+                        serverrequest[2] = length;
                         for(int j = 0; j < length; j++)
                         {
                             serverrequest[j+3] = filename[j];
                         }
-                        for(int j = 6+length; j > 2+length; j--)
+                        for(int j = 6+length; j > 3+length; j--)
                         {
                             serverrequest[j] = fileLength & 0x000000ff;
                             fileLength = fileLength >> 8;
                         }
                         client->send(serverrequest, 3+length+fileLength);
                     }
-                    pthread_mutex_lock(&farg->mapMutex);
-                    farg->sockMap.insert(pair<Socket*,File*>(client, file));
-                    pthread_mutex_unlock(&farg->mapMutex);
+
                     pthread_mutex_lock(&farg->dataMutex);
                     farg->dataMulti.addSocket(*client);
                     pthread_mutex_unlock(&farg->dataMutex);
