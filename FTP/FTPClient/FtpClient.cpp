@@ -93,7 +93,7 @@ void* FtpClient::processCmd(void *arg) {
                 for(int i = 0;i<4;i++)
                     p[i] = recv_buffer[4-i];
                 if(filelen>=0&&id == cmdcount){
-                    printf("get file success\n");
+                    printf("file exist\n");
                 }else{
                     printf("file not exist or error\n");
                 }
