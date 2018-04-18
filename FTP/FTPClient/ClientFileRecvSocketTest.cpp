@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "ClientFileRecvSocket.h"
 
 using namespace std;
 

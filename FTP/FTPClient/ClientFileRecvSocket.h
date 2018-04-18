@@ -6,6 +6,11 @@
 #define NETWORKPROGRAMMING_CLIENTFILERECVSOCKET_H
 
 #include "../../Socket/Socket.h"
+#include "../../FileOperation/File.h"
+#include <vector>
+#include <mutex>
+
+#define BUFFER_LENGTH 256
 
 struct FileInfo{
     char mode;
@@ -17,9 +22,17 @@ struct FileInfo{
 
 struct FileStatus{
     char ID;
-    //TODO
+    char *fileName;
     bool status;
 };
+
+typedef struct {
+    Socket serverSocket;
+    std::vector<FileStatus> *fsQueue;
+    pthread_mutex_t *qMutex;
+
+}Info;
+
 
 class ClientFileRecvSocket {
 
@@ -27,18 +40,18 @@ private:
 
     FileInfo fInfo;
     FileStatus fStatus;
-    Socket sSocket;
+    Info cInfo;
 
 public:
 
     ClientFileRecvSocket();
-    ClientFileRecvSocket(Socket s);
+    ClientFileRecvSocket(Info *ci);
     int execute();
     int setFileInfo();
-    FileInfo getFileInfo();
-    int setFileStatus();
-    FileStatus getFileStatus();
+    int setFileStatus(int s);
+    int setQueue();
 };
 
+void* ClientFileRecv(void* arg);
 
 #endif //NETWORKPROGRAMMING_CLIENTFILERECVSOCKET_H
