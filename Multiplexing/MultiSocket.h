@@ -19,30 +19,32 @@ class MultiSocket {
         pthread_mutex_init(&mutex, NULL);
     }
 
-    std::vector<Socket> sockArr;
+    std::vector<Socket*> sockArr;
     pthread_mutex_t mutex;
     _pollfd sockpolls[DEFAULT_SOCKNUM];
 
 public:
     MultiSocket() {
         mutexInit();
-        sockArr = std::vector<Socket>();
+        sockArr = std::vector<Socket*>();
     }
 
-    MultiSocket(const std::vector<Socket>& socks);
+    MultiSocket(const std::vector<Socket*>& socks);
 
     ~MultiSocket() {
         pthread_mutex_destroy(&mutex);
     }
 
     // ------ Return number of empty slots for socket, -1 means already full.
-    int addSocket(const Socket &sock);
+    int addSocket(Socket *sock);
 
-    std::vector<Socket>& getSocks() {
+    int removeSocket(Socket *sock);
+
+    std::vector<Socket*>& getSocks() {
         return sockArr;
     }
 
-    void listenAll(std::vector<Socket>& inSocks, std::vector<Socket>& outSocks);
+    void listenAll(std::vector<Socket*>& inSocks, std::vector<Socket*>& outSocks);
 };
 
 

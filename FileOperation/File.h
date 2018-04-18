@@ -17,7 +17,11 @@
 
 class File {
 private:
-//    const char *filename;
+    const char *filename;
+public:
+    const char *getFilename() const;
+
+private:
 //    char mode;
 //    bool flag;
     int filelength;

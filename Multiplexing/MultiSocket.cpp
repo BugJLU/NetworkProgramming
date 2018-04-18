@@ -4,9 +4,9 @@
 
 #include "MultiSocket.h"
 
-MultiSocket::MultiSocket(const std::vector<Socket> &socks) {
+MultiSocket::MultiSocket(const std::vector<Socket*> &socks) {
     mutexInit();
-    sockArr = std::vector<Socket>(socks);
+    sockArr = std::vector<Socket*>(socks);
 }
 
 //int MultiSocket::addSocket(const Socket &sock) {
@@ -17,14 +17,24 @@ MultiSocket::MultiSocket(const std::vector<Socket> &socks) {
 //    return maxNum - sockNum;
 //}
 
-int MultiSocket::addSocket(const Socket &sock) {
+int MultiSocket::addSocket(Socket *sock) {
 //    pthread_mutex_lock(&mutex);
     sockArr.push_back(sock);
 //    pthread_mutex_unlock(&mutex);
 }
 
+int MultiSocket::removeSocket(Socket *sock) {
+    for (auto it = sockArr.begin(); it != sockArr.end(); ) {
+        if (*it == sock) {
+            it = sockArr.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    return 0;
+}
 
-void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &outSocks) {
+void MultiSocket::listenAll(std::vector<Socket*> &inSocks, std::vector<Socket*> &outSocks) {
 //    pthread_mutex_lock(&mutex);
     int max = -1;
 
@@ -34,7 +44,7 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
     outSocks.clear();
 
     for (int i = 0; i < asize; ++i) {
-        sockpolls[i].fd = sockArr[i].getFd();
+        sockpolls[i].fd = sockArr[i]->getFd();
         sockpolls[i].events = POLLIN | POLLOUT;
         if (sockpolls[i].fd > max)
             max = sockpolls[i].fd;
@@ -59,7 +69,7 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
 
     // Some sockets are ready to write/read.
     for (int i = asize-1; i >=0; --i) {
-        Socket sock1 = sockArr[i];
+        Socket* sock1 = sockArr[i];
         //TODO
         if (sockpolls[i].revents & POLLIN) {
             inSocks.push_back(sock1);
@@ -72,4 +82,6 @@ void MultiSocket::listenAll(std::vector<Socket> &inSocks, std::vector<Socket> &o
 //    pthread_mutex_unlock(&mutex);
 //    delete [] sockpolls;
 }
+
+
 

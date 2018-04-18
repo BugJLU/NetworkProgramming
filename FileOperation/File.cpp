@@ -21,6 +21,7 @@ int File::getFilelength() {
 }
 
 int File::open(const char *fname,char m) {
+    filename = fname;
     if(m==FILE_IN) {
         ifs.open(fname,std::ios::in|std::ios::binary);
         ifs.seekg(0,std::ios::end);
@@ -92,4 +93,8 @@ int File::write(const char *buffer, int length) {
         return -1;
     }
     return l;
+}
+
+const char *File::getFilename() const {
+    return filename;
 }

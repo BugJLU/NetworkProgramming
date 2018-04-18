@@ -68,7 +68,7 @@ int main()
         Socket client = server.accept();
         cout<<"1 client connected"<<endl;
 //        pthread_mutex_lock(&g_commandMutex);
-        g_commandMulti.addSocket(client);
+        g_commandMulti.addSocket(&client);
 //        pthread_mutex_unlock(&g_commandMutex);
     }
     return 0;
@@ -78,8 +78,8 @@ void* commandThread(void* arg)
 {
     pthread_detach(pthread_self());
     ftpArg* farg = (ftpArg*)arg;
-    vector<Socket> in;
-    vector<Socket> out;
+    vector<Socket*> in;
+    vector<Socket*> out;
     char request[300];
     char response[5];
     while(flag)
@@ -89,12 +89,14 @@ void* commandThread(void* arg)
 //        pthread_mutex_unlock(&farg->commandMutex);
         for(int i = 0; i < in.size(); i++)
         {
-            in[i].recv(request,300);
+//            cout<<i<<" ";
+            in[i]->recv(request,300);
             cout<<"request accepted: "; // TODO
             if(request[0] == 0)
             {
-                cout<<"GET ";   // TODO
+                cout<<"GET id-";   // TODO
                 char Id = request[1];
+                cout<<int(Id)<<" ";
                 int port = ((int)request[2] << 8) + request[3];
                 int length = request[4];
                 char filename[length+1];
@@ -105,14 +107,17 @@ void* commandThread(void* arg)
                 response[0] = Id;
                 if(file->open(filename, FILE_IN) != -1)
                 {
-                    int fileLength = file->getFilelength();
+                    int fltmp = file->getFilelength();
+                    cout<<"file "<<file->getFilename()<<" found, length: "<<fltmp<<endl;
+                    int fileLength = fltmp;
                     for(int j = 4; j > 0; j--)
                     {
                         response[j] = fileLength & 0x000000ff;
                         fileLength = fileLength >> 8;
                     }
-                    in[i].send(response,5);
-                    InetAddr clientAddress = in[i].getPeerAddr();
+                    fileLength = fltmp;
+                    in[i]->send(response,5);
+                    InetAddr clientAddress = in[i]->getPeerAddr();
                     clientAddress.setPort(port);
                     Socket* client = new Socket();
                     pthread_mutex_lock(&farg->mapMutex);
@@ -121,32 +126,35 @@ void* commandThread(void* arg)
                     if( client->connect(clientAddress) != -1 )
                     {
                         //unsigned int fileLength = file->getFilelength();
-                        char serverrequest[3+length+fileLength];
-                        serverrequest[1] = 0;
-                        serverrequest[2] = Id;
-                        serverrequest[3] = length;
+                        char* serverrequest = new char[3+length+fileLength];
+                        serverrequest[0] = 0;
+                        serverrequest[1] = Id;
+                        serverrequest[2] = length;
                         for(int j = 0; j < length; j++)
                         {
                             serverrequest[j+3] = filename[j];
                         }
-                        for(int j = 6+length; j > 2+length; j--)
+                        for(int j = 6+length; j >= 3+length; j--)
                         {
                             serverrequest[j] = fileLength & 0x000000ff;
                             fileLength = fileLength >> 8;
                         }
-                        client->send(serverrequest, 3+length+fileLength);
+                        client->send(serverrequest, 3+length+4);
+                        delete [] serverrequest;
                     }
+
                     pthread_mutex_lock(&farg->dataMutex);
-                    farg->dataMulti.addSocket(*client);
+                    farg->dataMulti.addSocket(client);
                     pthread_mutex_unlock(&farg->dataMutex);
 
                 }else
                 {
+                    cout<<"file not found"<<endl;
                     for(int j = 1; j < 5; j++)
                     {
                         response[j] = 0xff;
                     }
-                    in[i].send(response,5);
+                    in[i]->send(response,5);
                 }
 
             }
@@ -158,27 +166,30 @@ void* dataThread(void* arg)
 {
     pthread_detach(pthread_self());
     auto farg = (ftpArg*)arg;
-    vector<Socket> in, out;
+    vector<Socket*> in, out;
     char* buf = new char[SLICE_LEN];
     while (flag) {
         pthread_mutex_lock(&farg->dataMutex);
         farg->dataMulti.listenAll(in, out);
         pthread_mutex_unlock(&farg->dataMutex);
         for (int i = 0; i < out.size(); ++i) {
-            Socket& sock = out[i];
-            auto fileToSend = farg->sockMap[&sock];
+            Socket* sock = out[i];
+            auto fileToSend = farg->sockMap[sock];
             auto len = fileToSend->read(buf, SLICE_LEN);
-            sock.send(buf, len);
+            sock->send(buf, len);
             if (fileToSend->ieof()) {
-
-                farg->sockMap.erase(&sock);
-                sock.close();
-                delete &sock;
+                cout<<"transfer of file "<<fileToSend->getFilename()<<" finished"<<endl;
+                pthread_mutex_lock(&farg->dataMutex);
+                g_dataMulti.removeSocket(sock);
+                pthread_mutex_unlock(&farg->dataMutex);
+                farg->sockMap.erase(sock);
+                sock->close();
+//                delete sock;
                 fileToSend->close();
-                delete fileToSend;
+//                delete fileToSend;
                 // TODO： potential risk!!
-                out.erase(out.begin()+i);
-                --i;
+//                out.erase(out.begin()+i);
+//                --i;
             }
         }
     }
