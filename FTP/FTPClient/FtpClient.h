@@ -42,6 +42,7 @@ public:
     FtpClient(char*server);
     void start();
 private:
+    static bool running;
     static bool __init;
     static bool init();
     static std::vector<FileStatus>* fsQueue;
