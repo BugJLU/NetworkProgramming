@@ -55,14 +55,17 @@ void* FtpClient::processCmd(void *arg) {
         exit(1);
     }
     unsigned char cmdcount = 0;
-    while(true){
+    while(running){
         printf("Please enter the command: ");
-
         scanf("%s",cmd);
-        if(strcmp(cmd,"get")){
+        if(strcmp(cmd,"get") == 0){
             scanf("%s",filename);
             send_buffer[0] = 0;
+        }else if(strcmp(cmd,"quit") == 0){
+            running = false;
+            break;
         }else{
+            running = false;
             printf("unvalid command");
             break;
         }
@@ -105,7 +108,7 @@ void* FtpClient::processData(void *arg) {
     }
     listen(sockfd,MAXACC);
     socklen_t clilen = sizeof(cli_addr);
-    while(true){
+    while(running){
         if((newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr,&clilen))<0){
             perror("data:Error on accept");
             break;
@@ -140,6 +143,6 @@ void* FtpClient::processTrans(void *arg) {
 //bool FtpClient::__init = FtpClient::init();
 //pthread_mutex_t* FtpClient::qMutex;
 std::vector<FileStatus>* FtpClient::fsQueue = new std::vector<FileStatus>;
-
+bool FtpClient::running = true;
 
 
