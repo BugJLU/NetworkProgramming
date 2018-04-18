@@ -6,7 +6,7 @@ set(SOCK_LIB Socket/Socket.cpp Socket/Socket.h Socket/ServerSocket.cpp Socket/Se
 set(MULTI_LIB Multiplexing/MultiSocket.cpp Multiplexing/MultiSocket.h)
 set(TCP_FORK_LIB TcpFork/TcpFork.cpp TcpFork/TcpFork.h)
 set(FILE_LIB FileOperation/File.h FileOperation/File.cpp)
-set(CLIENT_RECV FTP/FTPClient/ClientFileRecvSocket.h FTP/FTPClient/ClientFileRecvSocket.cpp)
+set(CLIENT_RECV FTP/FTPClient/ClientFileRecvSocket.h FTP/FTPClient/ClientFileRecvSocket.cpp FTP/FTPClient/FtpClient.h FTP/FTPClient/FtpClient.cpp FTP/FTPClient/FtpClientTest.cpp)
 
 # Tests:
 add_executable(SocketTest ${SOCK_LIB} SocketTest.cpp)
@@ -19,8 +19,9 @@ add_executable(MultiTest ${SOCK_LIB} ${MULTI_LIB} Multiplexing/MultiTest.cpp)
 add_executable(EndlessClient ${SOCK_LIB} PublicTests/EndlessClient.cpp)
 add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp SocketRaw/RawSocketTest.cpp)
 add_executable(FileTest ${FILE_LIB} FileOperation/FileTest.cpp)
-add_executable(FTPServer FTP/FTPServer/Server.cpp ${SOCK_LIB} ${FILE_LIB})
-add_executable(FTPClientRecvTest ${CLIENT_RECV} ${SOCK_LIB} ${FILE_LIB} FTP/FTPClient/ClientFileRecvSocketTest.cpp)
+add_executable(FTPServer FTP/FTPServer/Server.cpp ${SOCK_LIB} ${FILE_LIB} ${MULTI_LIB})
+add_executable(FTPClientRecvTest ${CLIENT_RECV} FTP/FTPClient/ClientFileRecvSocketTest.cpp)
+add_executable(FTPClientTest FTP/FTPClient/FtpClient.h FTP/FTPClient/FtpClient.cpp FTP/FTPClient/FtpClientTest.cpp)
 
 # Executables:
 add_executable(NetworkProgramming2Client exp2/client2.cpp ${SOCK_LIB})
