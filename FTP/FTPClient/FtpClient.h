@@ -43,10 +43,11 @@ public:
     void start();
 private:
     static bool running;
-    static bool __init;
-    static bool init();
+
+    //static bool __init;
+    //static bool init();
     static std::vector<FileStatus>* fsQueue;
-    //static pthread_mutex_t* qMutex;
+    //static pthread_mutex_t qMutex;
     struct hostent* server;
     static void* processCmd(void * arg);
     static void* processData(void * arg);
