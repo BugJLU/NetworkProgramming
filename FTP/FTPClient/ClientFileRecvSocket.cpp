@@ -12,7 +12,7 @@ ClientFileRecvSocket::ClientFileRecvSocket() {
 ClientFileRecvSocket::ClientFileRecvSocket(Info *ci) {
 
     /*set nesssary information*/
-    cInfo.qMutex = ci->qMutex;
+    //cInfo.qMutex = ci->qMutex;
     cInfo.fsQueue = ci->fsQueue;
     cInfo.serverSocket = ci->serverSocket;
     /*all in one*/
@@ -89,9 +89,9 @@ int ClientFileRecvSocket::setFileStatus(int s) {
 
 
 int ClientFileRecvSocket::setQueue() {
-    pthread_mutex_lock(cInfo.qMutex);
+    //pthread_mutex_lock(cInfo.qMutex);
     cInfo.fsQueue->push_back(fStatus);
-    pthread_mutex_unlock(cInfo.qMutex);
+    //pthread_mutex_unlock(cInfo.qMutex);
     return 0;
 }
 

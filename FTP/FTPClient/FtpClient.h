@@ -10,31 +10,32 @@
 #include <pthread.h>
 #include<vector>
 #include "../../Socket/Socket.h"
+#include "ClientFileRecvSocket.h"
 
 #define DATA_PORT 2325
 #define SERV_PORT 7777
 #define ERROR -1
 
-struct FileInfo{
-    char mode;
-    char ID;
-    char fileNameLen;
-    char *fileName;
-    uint32_t fileLen;
-};
-
-struct FileStatus{
-    char ID;
-    char *fileName;
-    bool status;
-};
-
-typedef struct {
-    Socket serverSocket;
-    std::vector<FileStatus> *fsQueue;
-    pthread_mutex_t *qMutex;
-
-}Info;
+//struct FileInfo{
+//    char mode;
+//    char ID;
+//    char fileNameLen;
+//    char *fileName;
+//    uint32_t fileLen;
+//};
+//
+//struct FileStatus{
+//    char ID;
+//    char *fileName;
+//    bool status;
+//};
+//
+//typedef struct {
+//    Socket serverSocket;
+//    std::vector<FileStatus> *fsQueue;
+//    pthread_mutex_t *qMutex;
+//
+//}Info;
 
 class FtpClient{
 public:
