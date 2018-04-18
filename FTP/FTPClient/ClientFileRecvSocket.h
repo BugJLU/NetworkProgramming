@@ -18,7 +18,7 @@ struct FileInfo{
     char ID;
     char fileNameLen;
     char *fileName;
-    uint32_t fileLen;
+    int fileLen;
 };
 
 struct FileStatus{

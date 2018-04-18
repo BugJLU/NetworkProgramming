@@ -24,14 +24,14 @@ int ClientFileRecvSocket::execute() {
     setFileInfo();
     /*read file from serverSocket and write*/
     char buffer[BUFFER_LENGTH];
-    uint32_t recv_len = 0;
+    int recv_len = 0;
     File ofile;
     int openflag = ofile.open(fInfo.fileName,FILE_OUT);
     //TODO provide error information
     if(openflag == 0) {
         std::cout<<"file recv start"<<std::endl;
         while (recv_len < fInfo.fileLen) {
-            uint32_t cur_len = cInfo.serverSocket.recv(buffer, BUFFER_LENGTH);
+            int cur_len = cInfo.serverSocket.recv(buffer, BUFFER_LENGTH);
             ofile.write(buffer,cur_len);
             recv_len = recv_len + cur_len;
         }
@@ -70,16 +70,21 @@ int ClientFileRecvSocket::setFileInfo() {
     /*read file length*/
     char flen[4];
     int j = cInfo.serverSocket.recv(flen,4);
-    uint32_t l = 0;
+    int l = 0;
 
     for (int i = 0; i < 4; ++i) {
-        l = l<<8 + flen[i];
+        l = int(l<<8) + int(flen[i]<0?(flen[i]+256):flen[i]);
     }
 
     fInfo.fileLen = l;
     if(i==3&&j==4){
-        std::cout<<"set file info success"<<std::endl;
+        std::cout<<std::endl<<"set file info success"<<std::endl;
     }
+//    printf("%d\n",fInfo.mode);
+//    printf("%d\n",fInfo.ID);
+//    printf("%d\n",fInfo.fileNameLen);
+//    printf("%s\n",fInfo.fileName);
+//    printf("%d\n",fInfo.fileLen);
     return 0;
 }
 
