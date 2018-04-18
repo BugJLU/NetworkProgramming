@@ -95,8 +95,8 @@ void* commandThread(void* arg)
             {
                 cout<<"GET ";   // TODO
                 char Id = request[1];
-                unsigned  int port = request[2] << 8 + request[3];
-                unsigned  int length = request[4];
+                int port = request[2] << 8 + request[3];
+                int length = request[4];
                 char filename[length+1];
                 memset(filename, 0, length+1);
                 memcpy(filename, request + 5, length);
@@ -105,10 +105,11 @@ void* commandThread(void* arg)
                 response[0] = Id;
                 if(file->open(filename, FILE_IN) != -1)
                 {
+                    int fileLength = file->getFilelength();
                     for(int j = 4; j > 0; j--)
                     {
-                        response[j] = length - length >> 8 << 8;
-                        length = length >> 8;
+                        response[j] = fileLength & 0x000000ff;
+                        fileLength = fileLength >> 8;
                     }
                     in[i].send(response,5);
                     InetAddr clientAddress = in[i].getPeerAddr();
@@ -116,7 +117,7 @@ void* commandThread(void* arg)
                     Socket* client = new Socket();
                     if( client->connect(clientAddress) != -1 )
                     {
-                        unsigned int fileLength = file->getFilelength();
+                        //unsigned int fileLength = file->getFilelength();
                         char serverrequest[3+length+fileLength];
                         serverrequest[1] = 0;
                         serverrequest[2] = Id;
@@ -127,7 +128,7 @@ void* commandThread(void* arg)
                         }
                         for(int j = 6+length; j > 2+length; j--)
                         {
-                            serverrequest[j] = fileLength - fileLength >> 8 << 8;
+                            serverrequest[j] = fileLength & 0x000000ff;
                             fileLength = fileLength >> 8;
                         }
                         client->send(serverrequest, 3+length+fileLength);
@@ -141,11 +142,10 @@ void* commandThread(void* arg)
 
                 }else
                 {
-                    for(int j = 1; j < 4; j++)
+                    for(int j = 1; j < 5; j++)
                     {
-                        response[j] = 0;
+                        response[j] = 0xff;
                     }
-                    response[4] = -1;
                     in[i].send(response,5);
                 }
 
