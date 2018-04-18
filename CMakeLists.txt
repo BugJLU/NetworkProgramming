@@ -22,7 +22,7 @@ add_executable(RawSocketTest SocketRaw/RawSocket.h SocketRaw/RawSocket.cpp Socke
 add_executable(FileTest ${FILE_LIB} FileOperation/FileTest.cpp)
 add_executable(FTPServer FTP/FTPServer/Server.cpp ${SOCK_LIB} ${FILE_LIB} ${MULTI_LIB})
 add_executable(FTPClientRecvTest ${CLIENT_RECV} ${SOCK_LIB} ${FILE_LIB} FTP/FTPClient/ClientFileRecvSocketTest.cpp)
-add_executable(FTPClientTest FTP/FTPClient/FtpClient.h FTP/FTPClient/FtpClient.cpp FTP/FTPClient/FtpClientTest.cpp)
+add_executable(FTPClientTest ${SOCK_LIB} FTP/FTPClient/FtpClient.h FTP/FTPClient/FtpClient.cpp FTP/FTPClient/FtpClientTest.cpp)
 
 # Executables:
 add_executable(NetworkProgramming2Client exp2/client2.cpp ${SOCK_LIB})

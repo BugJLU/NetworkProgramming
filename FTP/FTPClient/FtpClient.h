@@ -38,11 +38,13 @@ typedef struct {
 
 class FtpClient{
 public:
-
     FtpClient(char*server);
     void start();
 private:
+    static bool __init;
+    static bool init();
     static std::vector<FileStatus>* fsQueue;
+    //static pthread_mutex_t* qMutex;
     struct hostent* server;
     static void* processCmd(void * arg);
     static void* processData(void * arg);

@@ -9,6 +9,7 @@
 
 #define MAXACC 10
 
+
 FtpClient::FtpClient(char*server) {
     this->server = gethostbyname(server);
 }
@@ -106,9 +107,9 @@ void* FtpClient::processData(void *arg) {
         Info info;
         Socket accSocket;
         accSocket.setFd(newsockfd);
-        pthread_mutex_init(info.qMutex,NULL);
         info.serverSocket = accSocket;
-        info.fsQueue = fsQueue;
+        info.fsQueue = FtpClient::fsQueue;
+        //info.qMutex = FtpClient::qMutex;
         pthread_create(&trans_tid,NULL,processTrans,(void*)&info);
     }
     close(sockfd);
@@ -119,5 +120,13 @@ void* FtpClient::processTrans(void *arg) {
     Info* info = (Info*)(arg);
 
 }
+/*bool FtpClient::init() {
+    pthread_mutex_init(FtpClient::qMutex,NULL);
 
+}*/
+//bool FtpClient::__init = FtpClient::init();
+//pthread_mutex_t* FtpClient::qMutex;
 std::vector<FileStatus>* FtpClient::fsQueue = new std::vector<FileStatus>;
+
+
+
