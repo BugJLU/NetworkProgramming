@@ -16,13 +16,13 @@ using namespace std;
 
 #define SLICE_LEN 1024
 
-pthread_mutex_t commandMutex;
-pthread_mutex_t dataMutex;
-pthread_mutex_t mapMutex;
+pthread_mutex_t g_commandMutex;
+pthread_mutex_t g_dataMutex;
+pthread_mutex_t g_mapMutex;
 
-MultiSocket commandMulti;
-MultiSocket dataMulti;
-map<Socket*, File*> sockMap;
+MultiSocket g_commandMulti;
+MultiSocket g_dataMulti;
+map<Socket*, File*> g_sockMap;
 
 bool flag = true;
 
@@ -44,27 +44,29 @@ void* dataThread(void*);
 int main()
 {
     ServerSocket server = ServerSocket(7777);
-    pthread_mutex_init(&commandMutex,NULL);
-    pthread_mutex_init(&dataMutex,NULL);
-    pthread_mutex_init(&mapMutex,NULL);
-    commandMulti = MultiSocket();
-    dataMulti = MultiSocket();
-    sockMap = map();
-    ftpArg globalArg = ftpArg();
-    globalArg.commandMutex = commandMutex;
-    globalArg.dataMutex = dataMutex;
-    globalArg.mapMutex = mapMutex;
-    globalArg.commandMulti = commandMulti;
-    globalArg.dataMulti = dataMulti;
-    globalArg.sockMap = sockMap;
+    pthread_mutex_init(&g_commandMutex,NULL);
+    pthread_mutex_init(&g_dataMutex,NULL);
+    pthread_mutex_init(&g_mapMutex,NULL);
+    g_commandMulti = MultiSocket();
+    g_dataMulti = MultiSocket();
+    g_sockMap = map<Socket*, File*>();
+    struct ftpArg globalArg{
+            g_commandMutex,
+            g_dataMutex,
+            g_mapMutex,
+            g_commandMulti,
+            g_dataMulti,
+            g_sockMap
+    };
     pthread_t commandThreadId;
     pthread_t dataThreadId;
     pthread_create(&commandThreadId, NULL, commandThread, &globalArg);
     pthread_create(&dataThreadId, NULL, dataThread, &globalArg);
+    server.listen();
     while (flag)
     {
         Socket client = server.accept();
-        commandMulti.addSocket(client);
+        g_commandMulti.addSocket(client);
     }
     return 0;
 }
@@ -73,8 +75,8 @@ void* commandThread(void* arg)
 {
     pthread_detach(pthread_self());
     ftpArg* farg = (ftpArg*)arg;
-    vector<Socket> in = vector();
-    vector<Socket> out = vector();
+    vector<Socket> in;
+    vector<Socket> out;
     char request[300];
     char response[5];
     while(flag)
