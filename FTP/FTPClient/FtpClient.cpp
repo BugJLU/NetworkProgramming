@@ -33,6 +33,7 @@ void FtpClient::start() {
 void* FtpClient::processCmd(void *arg) {
     int sockfd, n;
     char send_buffer[261];
+    char recv_buffer[6];
     char filename[256];
     unsigned char filelen;
     char cmd[10];
@@ -79,10 +80,25 @@ void* FtpClient::processCmd(void *arg) {
                 send_buffer[4+i] = filename[i-1];
             }
             send_buffer[5+filelen] = '\0';
-            if((n = write(sockfd, send_buffer,strlen(send_buffer)))<0){
+            if((n = write(sockfd, send_buffer,5+filelen))<0){
                 perror("cmd:Error writing to socket");
                 break;
             }
+            if((n = read(sockfd,recv_buffer,sizeof(recv_buffer)))!=5){
+                printf("get file error\n");
+            }else{
+                unsigned char id = recv_buffer[0];
+                int filelen;
+                char* p = (char*)&filelen;
+                for(int i = 0;i<4;i++)
+                    p[i] = recv_buffer[4-i];
+                if(filelen>=0&&id == cmdcount){
+                    printf("get file success\n");
+                }else{
+                    printf("file not exist or error\n");
+                }
+            }
+            cmdcount++;
 
         }
 
@@ -93,6 +109,7 @@ void* FtpClient::processCmd(void *arg) {
 
 void* FtpClient::processData(void *arg) {
     int sockfd, newsockfd, clicount;
+    //unsigned short portno;
     struct sockaddr_in serv_addr, cli_addr;
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0))<0){
         perror("data:Error opening socket");
