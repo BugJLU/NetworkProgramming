@@ -5,3 +5,5 @@ cmake-build-debug/
 .DS_Store
 */.idea/
 .idea/
+_cliTest/
+_serTest/
