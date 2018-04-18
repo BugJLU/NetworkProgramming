@@ -52,5 +52,6 @@ public:
     int setQueue();
 };
 
+void* ClientFileRecv(void* arg);
 
 #endif //NETWORKPROGRAMMING_CLIENTFILERECVSOCKET_H
