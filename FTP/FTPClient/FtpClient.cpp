@@ -17,8 +17,14 @@ FtpClient::FtpClient(char*server) {
 void FtpClient::start() {
 
     pthread_t cmd_tid, data_tid;
-    pthread_create(&cmd_tid,NULL,processCmd,(void*)server);
-    pthread_create(&data_tid,NULL,processData,NULL);
+    if(pthread_create(&cmd_tid,NULL,processCmd,(void*)server)!=0){
+        printf("pthread cmd create error");
+        exit(-1);
+    }
+    if(pthread_create(&data_tid,NULL,processData,NULL)!=0){
+        printf("pthread data create error");
+        exit(-1);
+    }
 }
 
 void* FtpClient::processCmd(void *arg) {
@@ -110,7 +116,10 @@ void* FtpClient::processData(void *arg) {
         info.serverSocket = accSocket;
         info.fsQueue = FtpClient::fsQueue;
         //info.qMutex = FtpClient::qMutex;
-        pthread_create(&trans_tid,NULL,processTrans,(void*)&info);
+        if(pthread_create(&trans_tid,NULL,processTrans,(void*)&info)!=0){
+            printf("pthread trans create error");
+            exit(-1);
+        }
     }
     close(sockfd);
     return 0;
