@@ -7,11 +7,16 @@
 #include <string.h>
 #include <netdb.h>
 
+#include <time.h>
+#include <stdlib.h>
+
 #define MAXACC 10
 
 
 FtpClient::FtpClient(char*server) {
     this->server = gethostbyname(server);
+    srand((int)time(0));
+    portno = (unsigned short)(rand() % 65536);
 }
 
 void FtpClient::start() {
@@ -74,7 +79,6 @@ void* FtpClient::processCmd(void *arg) {
 
         if((filelen = strlen(filename))>0){
             send_buffer[1] = cmdcount;
-            while(portno == 0);
             send_buffer[2] = portno>>8;
             send_buffer[3] = portno & 0x00ff;
             send_buffer[4] = filelen;
@@ -96,7 +100,7 @@ void* FtpClient::processCmd(void *arg) {
                 for(int i = 0;i<4;i++)
                     p[i] = recv_buffer[4-i];
                 if(filelen>=0&&id == cmdcount){
-                    printf("file exist\n");
+                    printf("file exist(filelen:%d)\n",filelen);
                 }else{
                     printf("file not exist or error\n");
                 }
@@ -126,7 +130,6 @@ void* FtpClient::processData(void *arg) {
         perror("data:Error on binding");
         exit(1);
     }
-    portno = serv_addr.sin_port;
     listen(sockfd,MAXACC);
     socklen_t clilen = sizeof(cli_addr);
     while(running){
