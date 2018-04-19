@@ -47,10 +47,10 @@ void* serlisten(void* arg) {
     pthread_detach(pthread_self());
 
     while(flag) {
-        Socket tmp = server->accept();
+        Socket& tmp = server->accept();
 
         pthread_mutex_lock(&mux);
-        multiSocket->addSocket(tmp);
+        multiSocket->addSocket(&tmp);
         pthread_mutex_unlock(&mux);
 
     }
@@ -70,8 +70,8 @@ int main() {
     pthread_t pt;
     pthread_create(&pt, NULL, serlisten, (void*)&larg);
 
-    vector<Socket> in = vector<Socket>();
-    vector<Socket> out = vector<Socket>();
+    vector<Socket*> in = vector<Socket*>();
+    vector<Socket*> out = vector<Socket*>();
     char buf[255];
     while(flag) {
         in.clear();
@@ -93,12 +93,12 @@ int main() {
         }
         for (int i = 0; i < in.size(); ++i) {
 //            cout<<in[i].getFd()<<endl;
-            in[i].recv(buf, 255);
+            in[i]->recv(buf, 255);
 //            cout<<"receive from "<<in[i].getFd()<<": "<<buf<<endl;
         }
         for (int i = 0; i < out.size(); ++i) {
-            sprintf(buf, "%ld", out[i].getFd());
-            out[i].send(buf, 11);
+            sprintf(buf, "%ld", out[i]->getFd());
+            out[i]->send(buf, 11);
 //            cout<<"send to "<<out[i].getFd()<<": hi"<<endl;
         }
     }

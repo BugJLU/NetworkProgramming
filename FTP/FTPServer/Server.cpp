@@ -97,7 +97,7 @@ void* commandThread(void* arg)
                 cout<<"GET id-";   // TODO
                 char Id = request[1];
                 cout<<int(Id)<<" ";
-                int port = ((int)request[2] << 8) + request[3];
+                int port = ((int)request[2] << 8) + (request[3]<0 ? (request[3]+256) : request[3]);
                 int length = request[4];
                 char filename[length+1];
                 memset(filename, 0, length+1);
